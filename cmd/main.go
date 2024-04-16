@@ -17,4 +17,6 @@ func main() {
 		log.Fatalf("Error al realizar las migraciones. %v", err)
 	}
 
+	dbUser := database.NewPsqlUser(database.Pool())
+
 }
