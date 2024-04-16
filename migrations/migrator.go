@@ -67,24 +67,6 @@ func (m *Migrator) migrateUser(tx *sql.Tx, query string) error {
 	return nil
 }
 
-func (m *Migrator) migrateUserAdmin(tx *sql.Tx, query string) error {
-	stmt, err := tx.Prepare(query)
-	if err != nil {
-		return err
-	}
-
-	defer stmt.Close()
-
-	_, err = stmt.Exec()
-	if err != nil {
-		return err
-	}
-
-	fmt.Println("Migracion de administradores completada")
-
-	return nil
-}
-
 func (m *Migrator) Migrate(db *sql.DB) error {
 	// migrar tabla usuarios
 	tx, err := db.Begin()
@@ -103,11 +85,6 @@ func (m *Migrator) Migrate(db *sql.DB) error {
 	}
 
 	if err := m.migrateorder(tx, psqlOrder); err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	if err := m.migrateUserAdmin(tx, psqladmin); err != nil {
 		tx.Rollback()
 		return err
 	}
