@@ -14,7 +14,7 @@ func NewMigrator(db *sql.DB) Migrator {
 		db: db,
 	}
 }
-func Migrateproduct(tx *sql.Tx, query string) error {
+func (m *Migrator) migrateproduct(tx *sql.Tx, query string) error {
 	stmt, err := tx.Prepare(query)
 	if err != nil {
 		return err
@@ -31,7 +31,7 @@ func Migrateproduct(tx *sql.Tx, query string) error {
 
 	return nil
 }
-func Migrateorder(tx *sql.Tx, query string) error {
+func (m *Migrator) migrateorder(tx *sql.Tx, query string) error {
 	stmt, err := tx.Prepare(query)
 	if err != nil {
 		return err
@@ -49,7 +49,7 @@ func Migrateorder(tx *sql.Tx, query string) error {
 	return nil
 }
 
-func MigrateUser(tx *sql.Tx, query string) error {
+func (m *Migrator) migrateUser(tx *sql.Tx, query string) error {
 	stmt, err := tx.Prepare(query)
 	if err != nil {
 		return err
@@ -67,29 +67,52 @@ func MigrateUser(tx *sql.Tx, query string) error {
 	return nil
 }
 
-func (M *Migrator) Migrate(db *sql.DB) error {
+func (m *Migrator) migrateUserAdmin(tx *sql.Tx, query string) error {
+	stmt, err := tx.Prepare(query)
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec()
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Migracion de administradores completada")
+
+	return nil
+}
+
+func (m *Migrator) Migrate(db *sql.DB) error {
 	// migrar tabla usuarios
 	tx, err := db.Begin()
 	if err != nil {
 		return err
 	}
 
-	if err := MigrateUser(tx, psqlUser); err != nil {
+	if err := m.migrateUser(tx, psqlUser); err != nil {
 		tx.Rollback()
 		return err
 	}
 
-	if err := Migrateproduct(tx, psqlProduct); err != nil {
+	if err := m.migrateproduct(tx, psqlProduct); err != nil {
 		tx.Rollback()
 		return err
 	}
 
-	if err := Migrateorder(tx, psqlOrder); err != nil {
+	if err := m.migrateorder(tx, psqlOrder); err != nil {
 		tx.Rollback()
 		return err
 	}
 
-	fmt.Println("Transaccion de migracion realizada")
+	if err := m.migrateUserAdmin(tx, psqladmin); err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	fmt.Println("Migraciones realizadas")
 
 	return tx.Commit()
 }

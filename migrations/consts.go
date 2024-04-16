@@ -32,3 +32,16 @@ CONSTRAINT orders_users_id_fk FOREIGN KEY (user_id)
 REFERENCES users (id) ON DELETE RESTRICT ON UPDATE CASCADE
 )
 `
+const psqladmin = `
+CREATE TABLE IF NOT EXISTS admin_users(
+	id uuid NOT NULL DEFAULT gen_random_uuid(),
+	name varchar(50) NOT NULL,
+	email varchar(100) NOT NULL,
+	roll varchar(40) NOT NULL,
+	password varchar(200) NOT NULL,
+	created_at TIMESTAMP NOT NULL DEFAULT now(),
+	updated_at TIMESTAMP,
+	CONSTRAINT admin_user_id_pk PRIMARY KEY (id),
+	CONSTRAINT admin_user_email_uq UNIQUE (email)
+)
+`
