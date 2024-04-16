@@ -22,6 +22,11 @@ func Migrateproduct(tx *sql.Tx, query string) error {
 
 	defer stmt.Close()
 
+	_, err = stmt.Exec()
+	if err != nil {
+		return err
+	}
+
 	fmt.Println("Migracion de producto creada")
 
 	return nil
@@ -32,7 +37,12 @@ func Migrateorder(tx *sql.Tx, query string) error {
 		return err
 	}
 
-	stmt.Close()
+	defer stmt.Close()
+
+	_, err = stmt.Exec()
+	if err != nil {
+		return err
+	}
 
 	fmt.Println("Migracion de order realizada")
 
@@ -46,6 +56,11 @@ func MigrateUser(tx *sql.Tx, query string) error {
 	}
 
 	defer stmt.Close()
+
+	_, err = stmt.Exec()
+	if err != nil {
+		return err
+	}
 
 	fmt.Println("Migracion de User realizada")
 

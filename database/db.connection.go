@@ -2,6 +2,9 @@ package database
 
 import (
 	"database/sql"
+
+	_ "github.com/lib/pq"
+
 	"fmt"
 	"log"
 	"sync"
@@ -16,7 +19,9 @@ func NewPostgresConnection() {
 	once.Do(func() {
 		var err error
 
-		db, err = sql.Open("postgres", "")
+		connStr := "postgres://poncho:SecurePassword@localhost:3000/inventory_system?sslmode=disable"
+
+		db, err = sql.Open("postgres", connStr)
 		if err != nil {
 			log.Fatalf("no se pudo conectar a la DB", err)
 		}

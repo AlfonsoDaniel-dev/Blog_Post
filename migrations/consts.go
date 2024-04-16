@@ -21,14 +21,14 @@ const psqlProduct = `CREATE TABLE IF NOT EXISTS products(
 )`
 
 const psqlOrder = `
-CREATE TABLE IF NOT EXISTS order(
-id uuid NOT NULL DEFAULT gen_random_uuid()
-user_id uuid NOT NULL NOT NULL
+CREATE TABLE IF NOT EXISTS orders(
+id uuid NOT NULL DEFAULT gen_random_uuid(),
+user_id uuid NOT NULL,
 details varchar(240) NOT NULL,
 created_at TIMESTAMP NOT NULL DEFAULT now(),
 Upadated_at TIMESTAMP,
 CONSTRAINT orders_id_pk PRIMARY KEY (id),
-CONSTRAINT orders_users_is_fk FOREIGN KEY (users_id)
+CONSTRAINT orders_users_id_fk FOREIGN KEY (user_id)
 REFERENCES users (id) ON DELETE RESTRICT ON UPDATE CASCADE
 )
 `
