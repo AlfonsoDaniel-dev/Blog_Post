@@ -23,7 +23,7 @@ func NewPostgresConnection() {
 
 		db, err = sql.Open("postgres", connStr)
 		if err != nil {
-			log.Fatalf("no se pudo conectar a la DB", err)
+			log.Fatalf("no se pudo conectar a la DB %v", err)
 		}
 
 		if err = db.Ping(); err != nil {
