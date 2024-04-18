@@ -74,12 +74,12 @@ func (m *Migrator) Migrate(db *sql.DB) error {
 		return err
 	}
 
-	if err := m.migrateUser(tx, psqlUser); err != nil {
+	if err := m.migrateUser(tx, psql16_04_24Migration); err != nil {
 		tx.Rollback()
 		return err
 	}
 
-	if err := m.migrateproduct(tx, psqlProduct); err != nil {
+	if err := m.migrateproduct(tx, psql16_04_24Migrationproduct); err != nil {
 		tx.Rollback()
 		return err
 	}

@@ -34,3 +34,5 @@ REFERENCES users (id) ON DELETE RESTRICT ON UPDATE CASCADE
 `
 
 const psql16_04_24Migration = `ALTER TABLE users ADD COLUMN is_admin BOOL NOT NULL DEFAULT false`
+
+const psql16_04_24Migrationproduct = `ALTER TABLE products ADD COLUMN creator id uuid NOT NULL FOREIGN KEY REFERENCES users (id) on UPDATE CASCADE on DELETE RESTRICT`
