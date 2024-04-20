@@ -19,11 +19,11 @@ const sqlGetAllUsers = `
 
 const sqlGetUserById = `SELECT (id, name, email, created_at, updated_at) FROM USERS WHERE id = $1`
 
-const sqlUpdateUserName = `UPDATE user SET name= $1 WHERE id = $2`
+const sqlUpdateUserName = `UPDATE users SET name= $1 WHERE id = $2`
 
-const sqlUserUpdateEmail = `UPDATE user SET email =$1 WHERE id = $2`
+const sqlUserUpdateEmail = `UPDATE users SET email =$1 WHERE id = $2`
 
-const sqlUserUpdatePassword = `UPDATE user SER password = $1 WHERE id = $2`
+const sqlUserUpdatePassword = `UPDATE users SET password = $1 WHERE id = $2`
 
 const sqlDeleteUser = `DELETE * FROM USERS WHERE id = $1`
 

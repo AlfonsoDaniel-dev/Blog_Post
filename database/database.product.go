@@ -13,6 +13,8 @@ const sqlCreateProduct = `INSERT INTO products(owner_id, name, price) VALUES ($1
 const sqlGetProduct = `SELECT (id, owner_id, name, price, created_at) FROM products WHERE name = $2`
 const sqlGetAllProducts = `SELECT (id, owner_id, name, price, created_at) FROM products`
 const sqlDeleteProduct = `DELETE * FROM PRODUCTS WHERE id = $1`
+const sqlUpdateProductName = `UPDATE products SET name = $1 WHERE id = $2`
+const sqlUpdateProductPrice = `UPDATE products SET price = $1 WHERE id = $2 `
 
 type psqlprduct struct {
 	DB *sql.DB
@@ -133,4 +135,50 @@ func (p *psqlprduct) DeleteProduct(id int) error {
 	fmt.Printf("Producto Eliminado, Filas Afectadas: %v", rowsAff)
 
 	return nil
+}
+
+func (p *psqlprduct) UpdateProductName(id int, product models.Product) error {
+	stmt, err := p.DB.Prepare(sqlUpdateProductName)
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	row, err := stmt.Exec(product.Name)
+	if err != nil {
+		return err
+	}
+
+	rowsaff, err := row.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Producto actualizado. Filas afectadas: %v", rowsaff)
+
+	return nil
+}
+
+func (p *psqlUser) UpdateProductPrice(id int, product models.Product) error {
+	stmt, err := p.DB.Prepare(sqlUpdateProductPrice)
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	row, err := stmt.Exec(product.Price, id)
+	if err != nil {
+		return err
+	}
+
+	rowsAff, err := row.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Producto actualizado. Filas afectadas: %v", rowsAff)
+
+	return err
 }
