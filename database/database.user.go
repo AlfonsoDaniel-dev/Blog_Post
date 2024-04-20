@@ -14,7 +14,7 @@ INSERT INTO USERS(id, name, email, password, created_at, updated_at) VALUES($1, 
 `
 
 const sqlGetAllUsers = `
-	SELECT * FROM USERS
+	SELECT (id, name, email, created_at, updated_at) FROM USERS
 `
 
 const sqlGetUserById = `SELECT (id, name, email, created_at, updated_at) FROM USERS WHERE id = $1`
@@ -26,6 +26,8 @@ const sqlUserUpdateEmail = `UPDATE users SET email =$1 WHERE id = $2`
 const sqlUserUpdatePassword = `UPDATE users SET password = $1 WHERE id = $2`
 
 const sqlDeleteUser = `DELETE * FROM USERS WHERE id = $1`
+
+const sqlGetUserHashPassword = `SELECT password FROM users WHERE id = $1`
 
 type psqlUser struct {
 	DB *sql.DB
@@ -91,7 +93,6 @@ func (u *psqlUser) GetAllUsers() ([]models.User, error) {
 			&user.ID,
 			&user.Name,
 			&user.Email,
-			&user.Password,
 			&user.Created_at,
 			&user.Updated_at,
 		)
@@ -162,7 +163,7 @@ func (u *psqlUser) UpdateUserEmail(id int, user models.User) error {
 	return nil
 }
 
-func (u *psqlUser) UpdatePassword(password uuid.UUID, id int) error {
+func (u *psqlUser) UpdatePassword(id int, password uuid.UUID) error {
 	stmt, err := u.DB.Prepare(sqlUserUpdatePassword)
 	if err != nil {
 		return err
@@ -201,4 +202,8 @@ func (u *psqlUser) DeleteUser(id int) error {
 	fmt.Printf("Usuario borrado. Registros afectados: %v", rows_affected)
 
 	return nil
+}
+
+func (u *psqlUser) GetUserHashPassword(id int) string {
+
 }
