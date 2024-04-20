@@ -27,7 +27,7 @@ const sqlUserUpdatePassword = `UPDATE users SET password = $1 WHERE id = $2`
 
 const sqlDeleteUser = `DELETE * FROM USERS WHERE id = $1`
 
-const sqlGetUserHashPassword = `SELECT password FROM users WHERE id = $1`
+const sqlGetHashPasswordByUSerId = `SELECT password FROM users WHERE id = $1`
 
 type psqlUser struct {
 	DB *sql.DB
@@ -204,6 +204,26 @@ func (u *psqlUser) DeleteUser(id int) error {
 	return nil
 }
 
-func (u *psqlUser) GetUserHashPassword(id int) string {
+func (u *psqlUser) GetHashPassword(id int) (string, error) {
+	stmt, err := u.DB.Prepare(sqlGetHashPasswordByUSerId)
+	if err != nil {
+		return "", err
+	}
 
+	defer stmt.Close()
+
+	row := stmt.QueryRow(id)
+	if err != nil {
+		return "", err
+	}
+
+	var password string
+	err = row.Scan(&password)
+	if err != nil {
+		return "", err
+	}
+
+	fmt.Println("hash del password obtenido")
+
+	return password, nil
 }

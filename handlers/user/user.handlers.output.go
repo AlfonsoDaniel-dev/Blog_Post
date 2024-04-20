@@ -12,4 +12,5 @@ type Useroutput interface {
 	UpdateUserName(id int, user models.User) error
 	UpdatePassword(id int, password uuid.UUID) error
 	DeleteUser(id int) error
+	GetHashPassword(id int) (string, error)
 }
