@@ -27,4 +27,26 @@ func (uh *userHandler) Create(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
+	err = uh.i.CreateUser(user)
+	if err != nil {
+		response := helpers.NewResponse("Error", "Error Creando el usuario", err)
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	response := helpers.NewResponse("OK", "Usuario Creado", user)
+
+	return c.JSON(http.StatusCreated, response)
 }
+
+func (uh *userHandler) GetAll(c echo.Context) error {
+	users, err := uh.i.GetAllUsers()
+	if err != nil {
+		response := helpers.NewResponse("Error", "Error Obteninedo todos los usuarios", err)
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	response := helpers.NewResponse("OK", "usuarios obtenidos correctamente", users)
+	return c.JSON(http.StatusOK, response)
+}
+
+func 
