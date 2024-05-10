@@ -1,19 +1,21 @@
-package main
+package config
 
 import (
 	"errors"
 	"github.com/joho/godotenv"
+	"log"
 	"os"
 	"strings"
 )
 
 var envVars = []string{"DB_HOST", "DB_PORT", "DB_USER", "DB_PASSWORD", "DB_NAME", "APP_HOST", "APP_PORT", "ALLOWED_ORIGINS"}
 
-func loadEnv() error {
+func LoadEnv() error {
 	err := godotenv.Load()
 	if err != nil {
 		return err
 	}
+	log.Println(".env vars loaded")
 
 	return nil
 }

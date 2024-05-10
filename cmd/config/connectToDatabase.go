@@ -1,23 +1,13 @@
-package main
+package config
 
 import (
-	"database/sql"
 	"fmt"
-	"github.com/TeenBanner/Inventory_system/database"
 	"os"
 )
 
 var envDbVarsRequired = []string{"DB_USER", "DB_PASSWORD", "DB_PORT", "DB_HOST", "DB_NAME"}
 
-func connectDB() *sql.DB {
-	database.CreateConnection(createStrConn())
-
-	db := database.Pool()
-
-	return db
-}
-
-func createStrConn() string {
+func CreateStrConn() string {
 	vars := getEnvDbVars()
 	var (
 		user     = ""
@@ -27,10 +17,10 @@ func createStrConn() string {
 		dbName   = ""
 	)
 
-	required := []string{user, password, host, port, dbName}
+	required := []*string{&user, &password, &host, &port, &dbName}
 	for i := 0; i < len(vars); i++ {
 		for j := 0; j < len(required); j++ {
-			required[j] = vars[i]
+			required[j] = &vars[i]
 		}
 	}
 

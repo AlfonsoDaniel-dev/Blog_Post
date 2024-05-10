@@ -2,7 +2,9 @@ package psqlUser
 
 import (
 	"database/sql"
+	"github.com/TeenBanner/Inventory_system/database"
 	"github.com/TeenBanner/Inventory_system/models"
+	"log"
 )
 
 type PsqlUser struct {
@@ -14,17 +16,28 @@ func NewPsqlUser(db *sql.DB) *PsqlUser {
 }
 
 func (u *PsqlUser) CreateUser(user models.User) error {
-	stmt, err := u.db.Prepare(CreateUserQuery)
+	stmt, err := u.db.Prepare(SqlCreateUserQuery)
 	if err != nil {
 		return err
 	}
 
 	defer stmt.Close()
 
-	row, err := stmt.Exec(
+	UserNullTime := database.TimeToNull(user.UpdatedAt)
+
+	_, err = stmt.Exec(
 		user.ID,
 		user.Name,
 		user.Email,
 		user.Password,
+		user.CreatedAt,
+		UserNullTime,
 	)
+
+	if err != nil {
+		return err
+	}
+
+	log.Println("Usuario creado")
+	return nil
 }
