@@ -101,7 +101,7 @@ func (M *Migrator) migrateAdminTable(tx *sql.Tx, query string) error {
 		return err
 	}
 
-	fmt.Println("Migracion de administradores completada")
+	log.Println("Migracion de administradores completada")
 
 	return nil
 }
@@ -123,7 +123,7 @@ func (m *Migrator) Migrate(db *sql.DB) error {
 		return err
 	}
 
-	if err := m.MigrateTablePosts(tx, SqlCreatePostTable); err != nil {
+	if err := m.MigrateTablePosts(tx, addCreatedAndUpdatedAtToPosts); err != nil {
 		tx.Rollback()
 		return err
 	}

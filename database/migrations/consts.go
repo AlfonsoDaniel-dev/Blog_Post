@@ -23,3 +23,7 @@ const SqlCreatePostTable = `CREATE TABLE IF NOT EXISTS posts (
     CONSTRAINT posts_owner_id_fk FOREIGN KEY (owner_id)
     REFERENCES users (id) ON DELETE RESTRICT ON UPDATE RESTRICT
 )`
+
+const addCreatedAndUpdatedAtToPosts = `ALTER TABLE IF EXISTS posts 
+    ADD COLUMN IF NOT EXISTS created_at TIMESTAMP NOT NULL DEFAULT now(),
+    ADD COLUMN IF NOT EXISTS Updated_at TIMESTAMP;`

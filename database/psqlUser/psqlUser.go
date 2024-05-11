@@ -2,8 +2,10 @@ package psqlUser
 
 import (
 	"database/sql"
+	"errors"
 	"github.com/TeenBanner/Inventory_system/database"
 	"github.com/TeenBanner/Inventory_system/models"
+	"github.com/google/uuid"
 	"log"
 )
 
@@ -45,9 +47,56 @@ func (u *UserStorage) CreateUser(user models.User) error {
 	return nil
 }
 
-// AdminMethods
+// GetUser get info from a user
+func (u *UserStorage) GetUser(id uuid.UUID) (models.User, error) {
+	stmt, err := u.db.Prepare(SqlGetUser)
+	if err != nil {
+		return models.User{}, err
+	}
 
-// AdminGetUser get's info from a user
-func (u *UserStorage) AdminGetUser(id int) models.User {
-	stmt, err := u.db.Prepare()
+	defer stmt.Close()
+
+	row := stmt.QueryRow(id)
+	if row == nil {
+		return models.User{}, errors.New("user does not exist")
+	}
+	user := models.User{}
+	err = row.Scan(&user.ID, &user.Name, &user.Email, &user.CreatedAt, &user.UpdatedAt)
+	if err != nil {
+		return models.User{}, err
+	}
+
+	return user, nil
 }
+
+func (u *UserStorage) GetUserPosts(id uuid.UUID) ([]models.Post, error) {
+	stmt, err := u.db.Prepare(SqlGetUserPosts)
+	if err != nil {
+		return nil, err
+	}
+
+	defer stmt.Close()
+
+	rows, err := stmt.Query(id)
+
+	posts := []models.Post{}
+	for rows.Next() {
+		post := models.Post{}
+
+		nullTime := sql.NullTime{}
+		err := rows.Scan(&post.ID, &post.OwnerId, &post.Title, &post.Body, &post.CreatedAt, &nullTime)
+		post.UpdatedAt = nullTime.Time
+		if err != nil {
+			return nil, err
+		}
+
+		posts = append(posts, post)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+
+	return posts, nil
+}
+
+// AdminMethods
