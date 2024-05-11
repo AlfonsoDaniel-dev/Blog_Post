@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/TeenBanner/Inventory_system/cmd/config"
-	"github.com/TeenBanner/Inventory_system/database"
-	"github.com/TeenBanner/Inventory_system/database/migrations"
+	"github.com/TeenBanner/Inventory_system/pkg/database"
+	"github.com/TeenBanner/Inventory_system/pkg/database/migrations"
 	"log"
 )
 

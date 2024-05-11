@@ -3,8 +3,9 @@ package psqlUser
 import (
 	"database/sql"
 	"errors"
-	"github.com/TeenBanner/Inventory_system/database"
-	"github.com/TeenBanner/Inventory_system/models"
+	"github.com/TeenBanner/Inventory_system/Post/domain/model"
+	models2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
+	"github.com/TeenBanner/Inventory_system/pkg/database"
 	"github.com/google/uuid"
 	"log"
 )
@@ -20,7 +21,7 @@ func NewPsqlUser(db *sql.DB) *UserStorage {
 }
 
 // User methods
-func (u *UserStorage) CreateUser(user models.User) error {
+func (u *UserStorage) CreateUser(user models2.User) error {
 	stmt, err := u.db.Prepare(SqlCreateUserQuery)
 	if err != nil {
 		return err
@@ -48,28 +49,28 @@ func (u *UserStorage) CreateUser(user models.User) error {
 }
 
 // GetUser get info from a user
-func (u *UserStorage) GetUser(id uuid.UUID) (models.User, error) {
+func (u *UserStorage) GetUser(id uuid.UUID) (models2.User, error) {
 	stmt, err := u.db.Prepare(SqlGetUser)
 	if err != nil {
-		return models.User{}, err
+		return models2.User{}, err
 	}
 
 	defer stmt.Close()
 
 	row := stmt.QueryRow(id)
 	if row == nil {
-		return models.User{}, errors.New("user does not exist")
+		return models2.User{}, errors.New("user does not exist")
 	}
-	user := models.User{}
+	user := models2.User{}
 	err = row.Scan(&user.ID, &user.Name, &user.Email, &user.CreatedAt, &user.UpdatedAt)
 	if err != nil {
-		return models.User{}, err
+		return models2.User{}, err
 	}
 
 	return user, nil
 }
 
-func (u *UserStorage) GetUserPosts(id uuid.UUID) ([]models.Post, error) {
+func (u *UserStorage) GetUserPosts(id uuid.UUID) ([]model.Post, error) {
 	stmt, err := u.db.Prepare(SqlGetUserPosts)
 	if err != nil {
 		return nil, err
@@ -79,9 +80,9 @@ func (u *UserStorage) GetUserPosts(id uuid.UUID) ([]models.Post, error) {
 
 	rows, err := stmt.Query(id)
 
-	posts := []models.Post{}
+	posts := []model.Post{}
 	for rows.Next() {
-		post := models.Post{}
+		post := model.Post{}
 
 		nullTime := sql.NullTime{}
 		err := rows.Scan(&post.ID, &post.OwnerId, &post.Title, &post.Body, &post.CreatedAt, &nullTime)
