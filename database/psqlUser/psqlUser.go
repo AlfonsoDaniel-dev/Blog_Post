@@ -7,15 +7,18 @@ import (
 	"log"
 )
 
-type PsqlUser struct {
+// UserStorage it's used for interact with DB
+type UserStorage struct {
 	db *sql.DB
 }
 
-func NewPsqlUser(db *sql.DB) *PsqlUser {
-	return &PsqlUser{}
+// NewUserStorage contructure for UserStorage
+func NewPsqlUser(db *sql.DB) *UserStorage {
+	return &UserStorage{}
 }
 
-func (u *PsqlUser) CreateUser(user models.User) error {
+// User methods
+func (u *UserStorage) CreateUser(user models.User) error {
 	stmt, err := u.db.Prepare(SqlCreateUserQuery)
 	if err != nil {
 		return err
@@ -40,4 +43,11 @@ func (u *PsqlUser) CreateUser(user models.User) error {
 
 	log.Println("Usuario creado")
 	return nil
+}
+
+// AdminMethods
+
+// AdminGetUser get's info from a user
+func (u *UserStorage) AdminGetUser(id int) models.User {
+	stmt, err := u.db.Prepare()
 }

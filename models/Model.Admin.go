@@ -4,5 +4,5 @@ type AdminActions interface {
 }
 
 type Admin struct {
-	AdminActions
+	User
 }
