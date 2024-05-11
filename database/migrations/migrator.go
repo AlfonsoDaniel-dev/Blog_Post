@@ -118,22 +118,12 @@ func (m *Migrator) Migrate(db *sql.DB) error {
 		return err
 	}
 
-	if err := m.MigrateRollTable(tx, SqlCreateRollTable); err != nil {
-		tx.Rollback()
-		return err
-	}
-
 	if err := m.MigrateTableUsers(tx, SqlCreateUserTable); err != nil {
 		tx.Rollback()
 		return err
 	}
 
 	if err := m.MigrateTablePosts(tx, SqlCreatePostTable); err != nil {
-		tx.Rollback()
-		return err
-	}
-
-	if err := m.migrateAdminTable(tx, SqlCreateAdminUsersTable); err != nil {
 		tx.Rollback()
 		return err
 	}
