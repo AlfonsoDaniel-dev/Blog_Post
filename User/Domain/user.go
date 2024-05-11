@@ -1,4 +1,4 @@
-package Domain
+package UserDomain
 
 import (
 	"github.com/TeenBanner/Inventory_system/models"

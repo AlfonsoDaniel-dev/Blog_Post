@@ -1,4 +1,4 @@
-package AppUser
+package UserApp
 
 type User interface {
 }
