@@ -1,4 +1,4 @@
-package model
+package model2
 
 import (
 	"github.com/TeenBanner/Inventory_system/Post/domain/model"
