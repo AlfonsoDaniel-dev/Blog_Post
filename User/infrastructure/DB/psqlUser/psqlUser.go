@@ -115,6 +115,22 @@ func (u *userStorage) UpdateUserName(email string) error {
 	return nil
 }
 
+func (u *userStorage) UpdateUserEmail(ActualEmail, NewEmail string) error {
+	stmt, err := u.db.Prepare(SqlUpdateUserEmail)
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(NewEmail, ActualEmail)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // AdminMethods
 
 func (u *userStorage) GetAllUsers() ([]models2.User, error) {
