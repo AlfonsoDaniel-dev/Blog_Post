@@ -1,7 +1,4 @@
 package UserApp
 
-type User interface {
-}
-
-type AdminUser interface {
+type UseCase interface {
 }

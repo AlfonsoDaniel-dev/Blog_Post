@@ -18,6 +18,3 @@ type AdminStorage interface {
 	UserStorage
 	GetAllUsers() ([]model2.User, error)
 }
-
-type UseCase interface {
-}
