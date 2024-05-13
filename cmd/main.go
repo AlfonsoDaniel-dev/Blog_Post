@@ -29,4 +29,9 @@ func main() {
 		log.Fatalf("no se pudieron hacer las migraciones. Error: %v", err)
 	}
 
+	e := config.NewHttp(db)
+
+	if err := e.Start(":8080"); err != nil {
+		log.Fatalf("Can't start server: %v", err)
+	}
 }
