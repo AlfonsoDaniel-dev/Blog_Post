@@ -9,31 +9,25 @@ var envDbVarsRequired = []string{"DB_USER", "DB_PASSWORD", "DB_PORT", "DB_HOST",
 
 func CreateStrConn() string {
 	vars := getEnvDbVars()
-	var (
-		user     = ""
-		password = ""
-		host     = ""
-		port     = ""
-		dbName   = ""
-	)
 
-	required := []*string{&user, &password, &host, &port, &dbName}
-	for i := 0; i < len(vars); i++ {
-		for j := 0; j < len(required); j++ {
-			required[j] = &vars[i]
-		}
-	}
+	user, password, port, host, dbName := vars[0], vars[1], vars[2], vars[3], vars[4]
 
-	return fmt.Sprintf("postgres://%v:%v@%v:%v/%v?sslmode=disable", user, password, host, port, dbName)
+	fmt.Println(vars[2])
+
+	connStr := fmt.Sprintf("postgres://%v:%v@%v:%v/%v?sslmode=disable", user, password, host, port, dbName)
+
+	return connStr
 }
 
 func getEnvDbVars() []string {
-	values := []string{}
-	for _, envVar := range envDbVarsRequired {
+	values := make([]string, len(envDbVarsRequired))
+	for i, envVar := range envDbVarsRequired {
 		value := os.Getenv(envVar)
-
-		values = append(values, value)
+		if value == "" {
+			fmt.Printf("Variable de entorno %s no está definida\n", envVar)
+			return []string{}
+		}
+		values[i] = value
 	}
-
 	return values
 }

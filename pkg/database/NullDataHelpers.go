@@ -14,7 +14,7 @@ func TimeToNull(t time.Time) sql.NullTime {
 	return null
 }
 
-func stringToNull(s string) sql.NullString {
+func StringToNull(s string) sql.NullString {
 	null := sql.NullString{
 		String: s,
 	}
