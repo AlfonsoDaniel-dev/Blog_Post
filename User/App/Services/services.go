@@ -16,11 +16,13 @@ func NewServices(useCase UserApp.UseCase) *Service {
 	}
 }
 
-type UserServices interface {
+type Services interface {
 	Register(user models2.User) (models2.User, error)
-	UpdateName(email, NewName string) error
-	UpdateUserEmail(ActualEmail, ewEmail string) error
-	GetUserByEmail(email string) (models2.User, error)
-	GetUserByName(name string) (models2.User, error)
+
+	GetByEmail(email string) (models2.User, error)
+	GetByName(name string) (models2.User, error)
 	GetPostsFromName(name string) ([]model.Post, error)
+
+	UpdateEmail(ActualEmail, NewEmail string) error
+	UpdateName(email, NewName string) error
 }

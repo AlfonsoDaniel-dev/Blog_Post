@@ -25,7 +25,7 @@ func (S Service) Register(user models2.User) (models2.User, error) {
 
 	user.IsAdmin = false
 
-	err := S.Create(user)
+	err := S.UseCase.CreateUser(user)
 	if err != nil {
 		return models2.User{}, err
 

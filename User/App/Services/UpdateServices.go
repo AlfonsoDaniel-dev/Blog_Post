@@ -21,7 +21,7 @@ func (S Service) UpdateName(email, NewName string) error {
 	return nil
 }
 
-func (S Service) UpdateUserEmail(ActualEmail, NewEmail string) error {
+func (S Service) UpdateEmail(ActualEmail, NewEmail string) error {
 	if ActualEmail == "" {
 		return errors.New("ActualEmail cannot be nil")
 	}
@@ -30,7 +30,7 @@ func (S Service) UpdateUserEmail(ActualEmail, NewEmail string) error {
 		return errors.New("NewEmail cannot be nil")
 	}
 
-	err := S.UseCase.UpdateEmail(ActualEmail, NewEmail)
+	err := S.UseCase.UpdateUserEmail(ActualEmail, NewEmail)
 	if err != nil {
 		return err
 	}

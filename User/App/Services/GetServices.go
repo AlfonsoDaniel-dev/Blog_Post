@@ -7,12 +7,12 @@ import (
 	"github.com/google/uuid"
 )
 
-func (S *Service) GetUserByEmail(Email string) (models2.User, error) {
+func (S *Service) GetByEmail(Email string) (models2.User, error) {
 	if Email == "" {
 		return models2.User{}, errors.New("search email cannot be nil")
 	}
 
-	user, err := S.UseCase.GetByEmail(Email)
+	user, err := S.UseCase.GetUserByEmail(Email)
 	if err != nil {
 		return models2.User{}, err
 	}
@@ -24,11 +24,11 @@ func (S *Service) GetUserByEmail(Email string) (models2.User, error) {
 	return user, nil
 }
 
-func (S *Service) GetUserByName(name string) (models2.User, error) {
+func (S *Service) GetByName(name string) (models2.User, error) {
 	if name == "" {
 		return models2.User{}, errors.New("search name cannot be nil")
 	}
-	user, err := S.UseCase.GetByName(name)
+	user, err := S.UseCase.GetUserByName(name)
 	if err != nil {
 		return models2.User{}, err
 	}
@@ -43,7 +43,7 @@ func (S *Service) GetPostsFromName(name string) ([]model.Post, error) {
 		return nil, errors.New("search name cannot be nil")
 	}
 
-	posts, err := S.UseCase.GetPosts(name)
+	posts, err := S.UseCase.GetPostsByName(name)
 	if err != nil {
 		return nil, err
 	}
