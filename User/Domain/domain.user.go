@@ -48,6 +48,16 @@ func (u *User) GetUser(email string) (model2.User, error) {
 	return user, nil
 }
 
+func (u *User) GetUserByName(name string) (model2.User, error) {
+	user, err := u.GetUserByName(name)
+
+	if err != nil {
+		return model2.User{}, err
+	}
+
+	return user, nil
+}
+
 func (u *User) UpdateEmail(ActualEmail, NewEmail string) error {
 	if NewEmail == ActualEmail {
 		return errors.New("user email can't be equal")

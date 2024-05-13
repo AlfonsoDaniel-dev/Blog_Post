@@ -1,6 +1,7 @@
 package Services
 
 import (
+	"github.com/TeenBanner/Inventory_system/Post/domain/model"
 	UserApp "github.com/TeenBanner/Inventory_system/User/App"
 	models2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
 )
@@ -20,4 +21,6 @@ type UserServices interface {
 	UpdateName(email, NewName string) error
 	UpdateUserEmail(ActualEmail, ewEmail string) error
 	GetUserByEmail(email string) (models2.User, error)
+	GetUserByName(name string) (models2.User, error)
+	GetPostFromName(name string) ([]model.Post, error)
 }

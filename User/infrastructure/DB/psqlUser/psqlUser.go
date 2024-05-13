@@ -50,7 +50,7 @@ func (u *userStorage) CreateUser(user models2.User) error {
 }
 
 // GetUser get info from a user
-func (u *userStorage) GetUser(email string) (models2.User, error) {
+func (u *userStorage) GetUserByEmail(email string) (models2.User, error) {
 	stmt, err := u.db.Prepare(SqlGetUser)
 	if err != nil {
 		return models2.User{}, err
@@ -71,7 +71,7 @@ func (u *userStorage) GetUser(email string) (models2.User, error) {
 	return user, nil
 }
 
-func (u *userStorage) GetUserPosts(email string) ([]model.Post, error) {
+func (u *userStorage) GetUserPosts(name string) ([]model.Post, error) {
 	stmt, err := u.db.Prepare(SqlGetUserPosts)
 	if err != nil {
 		return nil, err
@@ -79,14 +79,14 @@ func (u *userStorage) GetUserPosts(email string) ([]model.Post, error) {
 
 	defer stmt.Close()
 
-	rows, err := stmt.Query(email)
+	rows, err := stmt.Query(name)
 
 	posts := []model.Post{}
 	for rows.Next() {
 		post := model.Post{}
 
 		nullTime := sql.NullTime{}
-		err := rows.Scan(&post.ID, &post.OwnerId, &post.Title, &post.Body, &post.CreatedAt, &nullTime)
+		err := rows.Scan(&post.ID, &post.Title, &post.Body, &post.OwnerId, &post.CreatedAt, &nullTime)
 		post.UpdatedAt = nullTime.Time
 		if err != nil {
 			return nil, err
@@ -159,4 +159,31 @@ func (u *userStorage) GetAllUsers() ([]models2.User, error) {
 	}
 
 	return users, nil
+}
+
+func (U *userStorage) GetUserByName(name string) (models2.User, error) {
+	stmt, err := U.db.Prepare(SqlGetUserByName)
+	if err != nil {
+		return models2.User{}, err
+	}
+
+	user := models2.User{}
+
+	row := stmt.QueryRow(name)
+
+	if row == nil {
+		return models2.User{}, err
+	}
+
+	nulltime := sql.NullTime{}
+
+	err = row.Scan(&user.ID, &user.Name, &user.Email, &user.CreatedAt, &nulltime)
+	if err != nil {
+		return models2.User{}, err
+	}
+
+	user.Password = ""
+	user.UpdatedAt = nulltime.Time
+
+	return user, nil
 }
