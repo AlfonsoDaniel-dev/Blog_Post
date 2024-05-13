@@ -24,7 +24,7 @@ func (U *Handler) Register(c echo.Context) error {
 		return c.JSON(http.StatusMethodNotAllowed, response)
 	}
 
-	data := models2.User{}
+	data := models2.Register{}
 
 	err := c.Bind(&data)
 	if err != nil {
@@ -32,12 +32,28 @@ func (U *Handler) Register(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
-	user, err := U.Services.Register(data)
+	err = U.Services.Register(data)
 	if err != nil {
-		response := responses.NewResponse(nil, "Error", "Error registering user")
+		response := responses.NewResponse(err, "Error", "Error registering user")
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 
-	response := responses.NewResponse(user, "Success", "User created")
+	response := responses.NewResponse(nil, "Success", "User created")
 	return c.JSON(http.StatusCreated, response)
+}
+
+func (H *Handler) GetAll(c echo.Context) error {
+	if c.Request().Method != http.MethodGet {
+		response := responses.NewResponse(nil, "Error", "Method not allowed")
+		return c.JSON(http.StatusMethodNotAllowed, response)
+	}
+
+	users, err := H.Services.GetAllUsers()
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error getting all users")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	response := responses.NewResponse(users, "Success", "Users retrieved")
+	return c.JSON(http.StatusOK, response)
 }

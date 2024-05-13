@@ -150,6 +150,8 @@ func (u *userStorage) PsqlGetAllUsers() ([]models2.User, error) {
 
 		err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.CreatedAt, &nullTime)
 		user.UpdatedAt = nullTime.Time
+
+		users = append(users, user)
 		if err != nil {
 			return nil, err
 		}

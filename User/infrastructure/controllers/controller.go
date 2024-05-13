@@ -11,6 +11,7 @@ import (
 
 type HanlderServices interface {
 	Register(c echo.Context) error
+	GetAll(c echo.Context) error
 }
 
 type UserController struct {
@@ -42,4 +43,5 @@ func (h *UserController) PublicRoutes(e *echo.Echo) {
 	e.Use(middleware.Recover())
 
 	e.POST("/", h.HanlderServices.Register)
+	e.GET("/users", h.HanlderServices.GetAll)
 }

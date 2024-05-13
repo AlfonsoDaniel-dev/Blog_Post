@@ -113,7 +113,7 @@ func (m *Migrator) Migrate(db *sql.DB) error {
 		return err
 	}
 
-	if err := m.MigrateExtension(tx, SqlCreateUuidExtension); err != nil {
+	if err := m.MigrateExtension(tx, hacer_is_admin_Default_false); err != nil {
 		tx.Rollback()
 		return err
 	}

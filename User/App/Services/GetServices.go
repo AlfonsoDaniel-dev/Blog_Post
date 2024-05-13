@@ -50,3 +50,12 @@ func (S *Service) GetPostsFromName(name string) ([]model.Post, error) {
 
 	return posts, nil
 }
+
+func (S *Service) GetAllUsers() ([]models2.User, error) {
+	users, err := S.UseCase.GetAllUsers()
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}

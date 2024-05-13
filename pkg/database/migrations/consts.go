@@ -27,3 +27,5 @@ const SqlCreatePostTable = `CREATE TABLE IF NOT EXISTS posts (
 const addCreatedAndUpdatedAtToPosts = `ALTER TABLE IF EXISTS posts 
     ADD COLUMN IF NOT EXISTS created_at TIMESTAMP NOT NULL DEFAULT now(),
     ADD COLUMN IF NOT EXISTS Updated_at TIMESTAMP;`
+
+const hacer_is_admin_Default_false = `ALTER TABLE users ALTER COLUMN is_admin SET DEFAULT false`
