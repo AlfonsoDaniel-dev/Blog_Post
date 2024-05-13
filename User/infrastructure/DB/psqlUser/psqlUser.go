@@ -101,14 +101,14 @@ func (u *userStorage) GetUserPosts(email string) ([]model.Post, error) {
 	return posts, nil
 }
 
-func (u *userStorage) UpdateUserName(email string) error {
+func (u *userStorage) UpdateUserName(email, name string) error {
 	stmt, err := u.db.Prepare(SqlUpdateUserName)
 	if err != nil {
 		return err
 	}
 
 	defer stmt.Close()
-	_, err = stmt.Exec(email)
+	_, err = stmt.Exec(name, email)
 	if err != nil {
 		return err
 	}
