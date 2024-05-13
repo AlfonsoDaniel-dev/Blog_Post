@@ -22,5 +22,5 @@ type UserServices interface {
 	UpdateUserEmail(ActualEmail, ewEmail string) error
 	GetUserByEmail(email string) (models2.User, error)
 	GetUserByName(name string) (models2.User, error)
-	GetPostFromName(name string) ([]model.Post, error)
+	GetPostsFromName(name string) ([]model.Post, error)
 }

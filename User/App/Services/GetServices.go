@@ -38,7 +38,7 @@ func (S *Service) GetUserByName(name string) (models2.User, error) {
 	return user, nil
 }
 
-func (S *Service) GetUserPosts(name string) ([]model.Post, error) {
+func (S *Service) GetPostsFromName(name string) ([]model.Post, error) {
 	if name == "" {
 		return nil, errors.New("search name cannot be nil")
 	}
