@@ -3,7 +3,6 @@ package psqlUser
 import (
 	"database/sql"
 	"errors"
-	"github.com/TeenBanner/Inventory_system/Post/domain/model"
 	models2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
 	"github.com/TeenBanner/Inventory_system/pkg/database"
 	"log"
@@ -69,36 +68,6 @@ func (u *userStorage) PsqlGetUserByEmail(email string) (models2.User, error) {
 	}
 
 	return user, nil
-}
-
-func (u *userStorage) PsqlGetUserPosts(name string) ([]model.Post, error) {
-	stmt, err := u.db.Prepare(SqlGetUserPosts)
-	if err != nil {
-		return nil, err
-	}
-
-	defer stmt.Close()
-
-	rows, err := stmt.Query(name)
-
-	posts := []model.Post{}
-	for rows.Next() {
-		post := model.Post{}
-
-		nullTime := sql.NullTime{}
-		err := rows.Scan(&post.ID, &post.Title, &post.Body, &post.OwnerId, &post.CreatedAt, &nullTime)
-		post.UpdatedAt = nullTime.Time
-		if err != nil {
-			return nil, err
-		}
-
-		posts = append(posts, post)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-
-	return posts, nil
 }
 
 func (u *userStorage) PsqlUpdateUserName(email, name string) error {

@@ -1,7 +1,6 @@
 package UserApp
 
 import (
-	"github.com/TeenBanner/Inventory_system/Post/domain/model"
 	models2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
 )
 
@@ -13,7 +12,7 @@ type UseCase interface {
 	UpdateUserName(email, NewName string) error
 	AreEqual(email, passwordToVerify string) (bool, error)
 
-	GetPostsByName(name string) ([]model.Post, error)
+	GetPostsByName(name string) ([]models2.Post, error)
 
 	GetAllUsers() ([]models2.User, error)
 }

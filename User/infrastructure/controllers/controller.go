@@ -3,7 +3,7 @@ package controllers
 import (
 	"database/sql"
 	"github.com/TeenBanner/Inventory_system/User/App/Services"
-	UserDomain "github.com/TeenBanner/Inventory_system/User/Domain"
+	Domain "github.com/TeenBanner/Inventory_system/User/Domain"
 	"github.com/TeenBanner/Inventory_system/User/infrastructure/DB/psqlUser"
 	"github.com/TeenBanner/Inventory_system/pkg/middlewares"
 	"github.com/labstack/echo/v4"
@@ -29,7 +29,7 @@ func NewUserRouter(e *echo.Echo, db *sql.DB) {
 
 func BuildUserController(e *echo.Echo, DB *sql.DB) *UserController {
 	UserStorage := psqlUser.NewPsqlUser(DB)
-	user := UserDomain.NewUser(UserStorage)
+	user := Domain.NewUser(UserStorage)
 	service := Services.NewServices(user)
 
 	handler := NewHandler(service)

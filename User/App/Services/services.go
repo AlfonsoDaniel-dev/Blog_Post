@@ -1,7 +1,6 @@
 package Services
 
 import (
-	"github.com/TeenBanner/Inventory_system/Post/domain/model"
 	UserApp "github.com/TeenBanner/Inventory_system/User/App"
 	models2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
 )
@@ -22,7 +21,7 @@ type Services interface {
 
 	GetByEmail(email string) (models2.User, error)
 	GetByName(name string) (models2.User, error)
-	GetPostsFromName(name string) ([]model.Post, error)
+	GetPostsFromName(name string) ([]models2.Post, error)
 	GetAllUsers() ([]models2.User, error)
 
 	UpdateEmail(ActualEmail, NewEmail string) error

@@ -1,7 +1,6 @@
-package UserDomain
+package Domain
 
 import (
-	"github.com/TeenBanner/Inventory_system/Post/domain/model"
 	"github.com/TeenBanner/Inventory_system/User/Domain/model"
 )
 
@@ -14,7 +13,9 @@ type UserStorage interface {
 	PsqlUpdateUserEmail(ActualEmail, NewEmail string) error
 	PsqlGetAllUsers() ([]model2.User, error)
 
-	PsqlGetUserPosts(name string) ([]model.Post, error)
+	PsqlCreatePost(email string, post model2.Post) error
+	PsqlGetUserPosts(name string) ([]model2.Post, error)
+	PsqlFindPostByTitle(title string) ([]model2.Post, error)
 
 	PsqlLoginGetEmail(email string) (string, error)
 	PsqlLoginGetPassword(email string) (string, error)

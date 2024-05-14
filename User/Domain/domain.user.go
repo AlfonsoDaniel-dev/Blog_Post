@@ -1,9 +1,8 @@
-package UserDomain
+package Domain
 
 import (
 	"errors"
 	"fmt"
-	"github.com/TeenBanner/Inventory_system/Post/domain/model"
 	model2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
 	"golang.org/x/crypto/bcrypt"
 	"time"
@@ -98,7 +97,7 @@ func (u *User) UpdateUserName(email, NewName string) error {
 	return nil
 }
 
-func (u *User) GetPostsByName(name string) ([]model.Post, error) {
+func (u *User) GetPostsByName(name string) ([]model2.Post, error) {
 	if name == "" {
 		return nil, errors.New("search name can't be empty")
 	}

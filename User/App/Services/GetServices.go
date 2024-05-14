@@ -2,7 +2,6 @@ package Services
 
 import (
 	"errors"
-	"github.com/TeenBanner/Inventory_system/Post/domain/model"
 	models2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
 	"github.com/google/uuid"
 )
@@ -38,7 +37,7 @@ func (S *Service) GetByName(name string) (models2.User, error) {
 	return user, nil
 }
 
-func (S *Service) GetPostsFromName(name string) ([]model.Post, error) {
+func (S *Service) GetPostsFromName(name string) ([]models2.Post, error) {
 	if name == "" {
 		return nil, errors.New("search name cannot be nil")
 	}
