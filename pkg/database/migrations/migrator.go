@@ -123,7 +123,7 @@ func (m *Migrator) Migrate(db *sql.DB) error {
 		return err
 	}
 
-	if err := m.MigrateTablePosts(tx, Add_email_constraint); err != nil {
+	if err := m.MigrateTablePosts(tx, add_unique_titleAndOwner_email); err != nil {
 		tx.Rollback()
 		return err
 	}

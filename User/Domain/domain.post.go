@@ -3,7 +3,6 @@ package Domain
 import (
 	"errors"
 	model2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
-	"github.com/google/uuid"
 	"time"
 )
 
@@ -62,6 +61,7 @@ func (U *User) FindPostsByTitle(title string) ([]model2.Post, error) {
 	return posts, nil
 }
 
+/*
 func (U *User) FindPostById(id string) (uuid.UUID, error) {
 
 }
@@ -69,3 +69,4 @@ func (U *User) FindPostById(id string) (uuid.UUID, error) {
 func (U *User) UpdatePostById(id uuid.UUID) error {
 
 }
+*/

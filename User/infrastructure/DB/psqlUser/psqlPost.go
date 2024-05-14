@@ -154,5 +154,22 @@ func (P *userStorage) PsqlUpdatePostBody(email, body string) error {
 }
 
 func (U *userStorage) PsqlFindPostId(searchTitle, searchEmail string) (uuid.UUID, error) {
+	stmt, err := U.db.Prepare(SqlFindPostId)
+	if err != nil {
+		return uuid.Nil, err
+	}
 
+	defer stmt.Close()
+
+	row := stmt.QueryRow(searchTitle, searchEmail)
+	if row == nil {
+		return uuid.Nil, nil
+	}
+	id := uuid.UUID{}
+	err = row.Scan(&id)
+	if err != nil {
+		return uuid.Nil, err
+	}
+
+	return id, nil
 }
