@@ -12,7 +12,7 @@ func AuthMiddleware(f echo.HandlerFunc) echo.HandlerFunc {
 		token := c.Request().Header.Get("Authorization")
 		_, err := authorization.ValidateToken(token)
 		if err != nil {
-			response := responses.NewResponse(nil, "Error", "Not authorized")
+			response := responses.NewResponse(err, "Error", "Not authorized")
 			return c.JSON(http.StatusForbidden, response)
 		}
 

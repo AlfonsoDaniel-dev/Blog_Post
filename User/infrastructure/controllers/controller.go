@@ -5,6 +5,7 @@ import (
 	"github.com/TeenBanner/Inventory_system/User/App/Services"
 	UserDomain "github.com/TeenBanner/Inventory_system/User/Domain"
 	"github.com/TeenBanner/Inventory_system/User/infrastructure/DB/psqlUser"
+	"github.com/TeenBanner/Inventory_system/pkg/middlewares"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -12,6 +13,7 @@ import (
 type HanlderServices interface {
 	Register(c echo.Context) error
 	GetAll(c echo.Context) error
+	Login(c echo.Context) error
 }
 
 type UserController struct {
@@ -38,10 +40,16 @@ func BuildUserController(e *echo.Echo, DB *sql.DB) *UserController {
 	}
 }
 
+func (h *UserController) PrivateRoutes(e *echo.Echo) {
+
+	users := e.Group("/api/v1/private")
+	users.Use(middlewares.AuthMiddleware)
+	users.GET("/users", h.HanlderServices.GetAll)
+}
 func (h *UserController) PublicRoutes(e *echo.Echo) {
 
 	e.Use(middleware.Recover())
 
-	e.POST("/", h.HanlderServices.Register)
-	e.GET("/users", h.HanlderServices.GetAll)
+	e.POST("/register", h.HanlderServices.Register)
+	e.POST("/Login", h.HanlderServices.Login)
 }

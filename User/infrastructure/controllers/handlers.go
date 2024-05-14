@@ -42,6 +42,27 @@ func (U *Handler) Register(c echo.Context) error {
 	return c.JSON(http.StatusCreated, response)
 }
 
+func (U *Handler) Login(c echo.Context) error {
+	data := models2.Login{}
+	if c.Request().Method != http.MethodPost {
+		response := responses.NewResponse(nil, "Error", "Method not allowed")
+		return c.JSON(http.StatusMethodNotAllowed, response)
+	}
+	err := c.Bind(&data)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Request bad structured")
+		return c.JSON(http.StatusBadRequest, response)
+	}
+	token, err := U.Services.Login(data)
+	if err != nil {
+		response := responses.NewResponse(err, "Error", "Error login")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	response := responses.NewResponse(token, "Login Success", "User Logged In")
+	return c.JSON(http.StatusOK, response)
+}
+
 func (H *Handler) GetAll(c echo.Context) error {
 	if c.Request().Method != http.MethodGet {
 		response := responses.NewResponse(nil, "Error", "Method not allowed")

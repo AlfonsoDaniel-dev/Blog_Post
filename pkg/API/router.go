@@ -10,4 +10,5 @@ func InitRoutes(e *echo.Echo, db *sql.DB) {
 	controller := controllers.BuildUserController(e, db)
 
 	controller.PublicRoutes(e)
+	controller.PrivateRoutes(e)
 }

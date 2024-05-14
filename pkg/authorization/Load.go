@@ -3,8 +3,8 @@ package authorization
 import (
 	"crypto/rsa"
 	"github.com/golang-jwt/jwt"
+	"os"
 
-	"io/ioutil"
 	"sync"
 )
 
@@ -14,20 +14,20 @@ var (
 	verifykey *rsa.PublicKey
 )
 
-func LoadFile(privateFile, publicfile string) error {
+func LoadFile(privateFile, publicFile string) error {
 	var err error
 	once.Do(func() {
-		err = readfiles(privateFile, publicfile)
+		err = readfiles(privateFile, publicFile)
 	})
 	return err
 }
 
-func readfiles(privateFilePath string, publicFilePath string) error {
-	privateBytes, err := ioutil.ReadFile(privateFilePath)
+func readfiles(privateFilePath, publicFilePath string) error {
+	privateBytes, err := os.ReadFile(privateFilePath)
 	if err != nil {
 		return err
 	}
-	publicbytes, err := ioutil.ReadFile(privateFilePath)
+	publicbytes, err := os.ReadFile(publicFilePath)
 	if err != nil {
 		return err
 	}

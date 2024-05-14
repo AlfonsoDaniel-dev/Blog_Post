@@ -25,5 +25,5 @@ func ValidateToken(t string) (model2.Claim, error) {
 }
 
 func VerifyFunc(t *jwt.Token) (interface{}, error) {
-	return signkey, nil
+	return verifykey, nil
 }

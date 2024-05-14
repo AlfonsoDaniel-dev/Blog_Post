@@ -18,6 +18,7 @@ func NewServices(useCase UserApp.UseCase) *Service {
 
 type Services interface {
 	Register(user models2.Register) error
+	Login(user models2.Login) (string, error)
 
 	GetByEmail(email string) (models2.User, error)
 	GetByName(name string) (models2.User, error)
