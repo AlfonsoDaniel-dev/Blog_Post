@@ -4,6 +4,7 @@ import (
 	"github.com/TeenBanner/Inventory_system/User/App/Services"
 	models2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
 	"github.com/TeenBanner/Inventory_system/User/infrastructure/controllers/responses"
+	"github.com/TeenBanner/Inventory_system/pkg/authorization"
 	"github.com/labstack/echo/v4"
 	"net/http"
 )
@@ -87,5 +88,52 @@ func (H *Handler) GetAll(c echo.Context) error {
 	}
 
 	response := responses.NewResponse(users, "Success", "Users retrieved")
+	return c.JSON(http.StatusOK, response)
+}
+
+func (H *Handler) CreatePost(c echo.Context) error {
+	if c.Request().Method != http.MethodPost {
+		response := responses.NewResponse(nil, "Error", "Method not allowed")
+		return c.JSON(http.StatusMethodNotAllowed, response)
+	}
+	data := models2.CreatePost{}
+	token := c.Request().Header.Get("Authorization")
+	email, err := authorization.GetEmailFromJWT(token)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error getting user email")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	err = c.Bind(&data)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Request bad structured")
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
+	post, err := H.Services.CreatePost(email, data)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error creating post")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	response := responses.NewResponse(post, "Success", "Post Created Successfully")
+	return c.JSON(http.StatusCreated, response)
+}
+
+func (H *Handler) GetPostsByEmail(c echo.Context) error {
+	if c.Request().Method != http.MethodGet {
+		response := responses.NewResponse(nil, "Error", "Method not allowed")
+		return c.JSON(http.StatusMethodNotAllowed, response)
+	}
+
+	email := c.Param("email")
+
+	posts, err := H.Services.GetAllPostsFromUser(email)
+	if err != nil {
+		response := responses.NewResponse(err, "Error", "Error getting all posts")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	response := responses.NewResponse(posts, "Success", "Posts retrieved")
 	return c.JSON(http.StatusOK, response)
 }

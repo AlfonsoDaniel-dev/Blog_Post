@@ -14,6 +14,8 @@ type HanlderServices interface {
 	Register(c echo.Context) error
 	GetAll(c echo.Context) error
 	Login(c echo.Context) error
+	GetPostsByEmail(c echo.Context) error
+	CreatePost(c echo.Context) error
 }
 
 type UserController struct {
@@ -45,12 +47,14 @@ func (h *UserController) PrivateRoutes(e *echo.Echo) {
 	users := e.Group("/api/v1/private")
 	users.Use(middlewares.AuthMiddleware)
 	users.GET("/users", h.HanlderServices.GetAll)
+	users.POST("/post", h.HanlderServices.CreatePost)
 }
 func (h *UserController) PublicRoutes(e *echo.Echo) {
 
 	e.Use(middleware.Recover())
 
 	public := e.Group("/api/v1/public")
+	public.GET("/:id", h.HanlderServices.GetPostsByEmail)
 	public.POST("/register", h.HanlderServices.Register)
 	public.POST("/Login", h.HanlderServices.Login)
 }

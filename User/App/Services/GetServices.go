@@ -58,3 +58,47 @@ func (S *Service) GetAllUsers() ([]models2.User, error) {
 
 	return users, nil
 }
+
+func (S *Service) GetAllPostsFromUser(email string) ([]models2.Post, error) {
+	if email == "" {
+		return nil, errors.New("search email cannot be nil")
+	}
+
+	posts, err := S.UseCase.GetUserPosts(email)
+	if err != nil {
+		return nil, err
+	}
+
+	return posts, nil
+}
+
+func (S *Service) GetAllPostsByTitle(title string) ([]models2.Post, error) {
+	if title == "" {
+		return nil, errors.New("search title cannot be nil")
+	}
+
+	posts, err := S.UseCase.FindPostsByTitle(title)
+	if err != nil {
+		return nil, err
+	}
+
+	return posts, nil
+}
+
+func (S *Service) GetPostByTitleAndEmail(searchTitle, searchEmail string) (models2.Post, error) {
+	if searchTitle == "" || searchEmail == "" {
+		return models2.Post{}, errors.New("please provide a valid search title or email")
+	}
+
+	id, err := S.UseCase.FindPostId(searchEmail, searchTitle)
+	if err != nil {
+		return models2.Post{}, err
+	}
+
+	post, err := S.UseCase.FindPostById(id)
+	if err != nil {
+		return models2.Post{}, err
+	}
+
+	return post, nil
+}

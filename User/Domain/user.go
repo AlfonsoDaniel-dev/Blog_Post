@@ -18,7 +18,7 @@ type UserStorage interface {
 
 	PsqlCreatePost(email string, post model2.Post) error
 	PsqlGetUserPosts(name string) ([]model2.Post, error)
-	PsqlFindPostsById(id uuid.UUID) ([]model2.Post, error)
+	PsqlFindPostById(id uuid.UUID) (model2.Post, error)
 	PsqlFindPostByTitle(title string) ([]model2.Post, error)
 	PsqlUpdatePostBody(email, body string) error
 

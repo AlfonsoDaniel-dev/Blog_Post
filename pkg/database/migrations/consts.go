@@ -32,4 +32,4 @@ const hacer_is_admin_Default_false = `ALTER TABLE users ALTER COLUMN is_admin SE
 const change_owner_id_to_owner_email = `ALTER TABLE posts DROP COLUMN owner_id, ADD COLUMN owner_email varchar(255) NOT NULL`
 const Add_email_constraint = `ALTER TABLE posts ADD CONSTRAINT posts_owner_id_fk FOREIGN KEY (owner_email) REFERENCES users(email) ON UPDATE CASCADE`
 
-const add_unique_titleAndOwner_email = `ALTER TABLE posts ADD CONSTRAINT posts_unique_title_email_per_post_uq UNIQUE (title, owner_email)`
+const add_unique_titleAndOwner_email = `ALTER TABLE posts ADD CONSTRAINT IF NOT EXISTS posts_unique_title_email_per_post_uq UNIQUE (title, owner_email)`

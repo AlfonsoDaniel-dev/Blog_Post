@@ -86,37 +86,26 @@ func (P *userStorage) PsqlFindPostByTitle(title string) ([]model2.Post, error) {
 	return posts, nil
 }
 
-func (P *userStorage) PsqlFindPostsById(id uuid.UUID) ([]model2.Post, error) {
+func (P *userStorage) PsqlFindPostById(id uuid.UUID) (model2.Post, error) {
 	stmt, err := P.db.Prepare(SqlGetPostsById)
 	if err != nil {
-		return nil, err
+		return model2.Post{}, err
 	}
 
 	defer stmt.Close()
 
-	rows, err := stmt.Query(id)
+	row := stmt.QueryRow(id)
+	post := model2.Post{}
+
+	nulltime := sql.NullTime{}
+
+	err = row.Scan(&post.ID, &post.Title, &post.Body, &post.OwnerEmail, &post.CreatedAt, &nulltime)
+	post.UpdatedAt = nulltime.Time
 	if err != nil {
-		return nil, err
+		return model2.Post{}, err
 	}
 
-	posts := []model2.Post{}
-	for rows.Next() {
-		post := model2.Post{}
-
-		nulltime := sql.NullTime{}
-		err := rows.Scan(&post.ID, &post.Title, &post.Body, &post.OwnerEmail, &post.CreatedAt, &nulltime)
-		post.UpdatedAt = nulltime.Time
-		if err != nil {
-			return nil, err
-		}
-
-		posts = append(posts, post)
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-
-	return posts, nil
+	return post, nil
 }
 
 func (P *userStorage) PsqlUpdatePostTitle(email string, title string) error {

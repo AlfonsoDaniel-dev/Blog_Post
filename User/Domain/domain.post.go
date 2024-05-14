@@ -3,6 +3,7 @@ package Domain
 import (
 	"errors"
 	model2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
+	"github.com/google/uuid"
 	"time"
 )
 
@@ -61,12 +62,28 @@ func (U *User) FindPostsByTitle(title string) ([]model2.Post, error) {
 	return posts, nil
 }
 
-/*
-func (U *User) FindPostById(id string) (uuid.UUID, error) {
+func (U *User) FindPostById(id uuid.UUID) (model2.Post, error) {
+	if id == uuid.Nil {
+		return model2.Post{}, errors.New("please provide a valid uuid")
+	}
 
+	post, err := U.UserStorage.PsqlFindPostById(id)
+	if err != nil {
+		return model2.Post{}, err
+	}
+
+	return post, nil
 }
 
-func (U *User) UpdatePostById(id uuid.UUID) error {
+func (U *User) FindPostId(searchTitle, searchEmail string) (uuid.UUID, error) {
+	if searchEmail == "" || searchTitle == "" {
+		return uuid.Nil, errors.New("please provide a valid search email or title")
+	}
 
+	post, err := U.UserStorage.PsqlFindPostId(searchTitle, searchEmail)
+	if err != nil {
+		return uuid.Nil, errors.New("post Id Does Not Exist.")
+	}
+
+	return post, nil
 }
-*/
