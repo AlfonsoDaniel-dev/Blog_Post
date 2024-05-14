@@ -11,6 +11,7 @@ type UseCase interface {
 	GetUserByName(name string) (models2.User, error)
 	UpdateUserEmail(ActualEmail, NewEmail string) error
 	UpdateUserName(email, NewName string) error
+	AreEqual(email, passwordToVerify string) (bool, error)
 
 	GetPostsByName(name string) ([]model.Post, error)
 

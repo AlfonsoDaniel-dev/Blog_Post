@@ -139,6 +139,8 @@ func (u *userStorage) PsqlGetAllUsers() ([]models2.User, error) {
 		return nil, err
 	}
 
+	defer stmt.Close()
+
 	rows, err := stmt.Query()
 	if err != nil {
 		return nil, err
@@ -168,6 +170,7 @@ func (U *userStorage) PsqlGetUserByName(name string) (models2.User, error) {
 	if err != nil {
 		return models2.User{}, err
 	}
+	defer stmt.Close()
 
 	user := models2.User{}
 
@@ -188,4 +191,40 @@ func (U *userStorage) PsqlGetUserByName(name string) (models2.User, error) {
 	user.UpdatedAt = nulltime.Time
 
 	return user, nil
+}
+
+func (U *userStorage) PsqlLoginGetEmail(email string) (string, error) {
+	stmt, err := U.db.Prepare(SqlLoginCompareEmails)
+	if err != nil {
+		return "", err
+	}
+
+	defer stmt.Close()
+
+	var DbEmail string
+	row := stmt.QueryRow(email)
+	err = row.Scan(&DbEmail)
+	if err != nil && DbEmail == "" {
+		return "", err
+	}
+
+	return DbEmail, nil
+}
+
+func (U *userStorage) PsqlLoginGetPassword(email string) (string, error) {
+	stmt, err := U.db.Prepare(SqlLoginGetHashdPasswordWithEmail)
+	if err != nil {
+		return "", err
+	}
+
+	defer stmt.Close()
+	var HashPassword string
+
+	row := stmt.QueryRow(email)
+	err = row.Scan(&HashPassword)
+	if err != nil && HashPassword == "" {
+		return "", err
+	}
+
+	return HashPassword, nil
 }

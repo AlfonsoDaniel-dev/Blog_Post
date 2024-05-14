@@ -15,4 +15,7 @@ type UserStorage interface {
 	PsqlGetAllUsers() ([]model2.User, error)
 
 	PsqlGetUserPosts(name string) ([]model.Post, error)
+
+	PsqlLoginGetEmail(email string) (string, error)
+	PsqlLoginGetPassword(email string) (string, error)
 }
