@@ -50,6 +50,7 @@ func (h *UserController) PublicRoutes(e *echo.Echo) {
 
 	e.Use(middleware.Recover())
 
-	e.POST("/register", h.HanlderServices.Register)
-	e.POST("/Login", h.HanlderServices.Login)
+	public := e.Group("/api/v1/public")
+	public.POST("/register", h.HanlderServices.Register)
+	public.POST("/Login", h.HanlderServices.Login)
 }

@@ -38,7 +38,18 @@ func (U *Handler) Register(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 
-	response := responses.NewResponse(nil, "Success", "User created")
+	login := models2.Login{
+		Email:    data.Email,
+		Password: data.Password,
+	}
+
+	token, err := U.Services.Login(login)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error registering user")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	response := responses.NewResponse(map[string]string{"token": token}, "Success", "User created")
 	return c.JSON(http.StatusCreated, response)
 }
 
