@@ -70,6 +70,28 @@ func (u *userStorage) PsqlGetUserByEmail(email string) (models2.User, error) {
 	return user, nil
 }
 
+func (U *userStorage) PsqlGetUserName(email string) (string, error) {
+	stmt, err := U.db.Prepare(SqlGetUserName)
+	if err != nil {
+		return "", err
+	}
+
+	defer stmt.Close()
+
+	row, err := stmt.Query(email)
+	if err != nil {
+		return "", err
+	}
+
+	var name string
+	err = row.Scan(&name)
+	if err != nil {
+		return "", err
+	}
+
+	return name, nil
+}
+
 func (u *userStorage) PsqlUpdateUserName(email, name string) error {
 	stmt, err := u.db.Prepare(SqlUpdateUserName)
 	if err != nil {

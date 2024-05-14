@@ -97,19 +97,6 @@ func (u *User) UpdateUserName(email, NewName string) error {
 	return nil
 }
 
-func (u *User) GetPostsByName(name string) ([]model2.Post, error) {
-	if name == "" {
-		return nil, errors.New("search name can't be empty")
-	}
-
-	posts, err := u.UserStorage.PsqlGetUserPosts(name)
-	if err != nil {
-		return nil, err
-	}
-
-	return posts, nil
-}
-
 // GetAllUsers admin functiond
 func (u *User) GetAllUsers() ([]model2.User, error) {
 	users, err := u.PsqlGetAllUsers()

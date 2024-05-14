@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"github.com/TeenBanner/Inventory_system/User/Domain/model"
 	"github.com/TeenBanner/Inventory_system/pkg/database"
+	"github.com/google/uuid"
 	"time"
 )
 
@@ -85,15 +86,15 @@ func (P *userStorage) PsqlFindPostByTitle(title string) ([]model2.Post, error) {
 	return posts, nil
 }
 
-func (P *userStorage) PsqlGetPostsFromUser(email string) ([]model2.Post, error) {
-	stmt, err := P.db.Prepare(SqlGetPostsByEmail)
+func (P *userStorage) PsqlFindPostsById(id uuid.UUID) ([]model2.Post, error) {
+	stmt, err := P.db.Prepare(SqlGetPostsById)
 	if err != nil {
 		return nil, err
 	}
 
 	defer stmt.Close()
 
-	rows, err := stmt.Query(email)
+	rows, err := stmt.Query(id)
 	if err != nil {
 		return nil, err
 	}
@@ -150,4 +151,8 @@ func (P *userStorage) PsqlUpdatePostBody(email, body string) error {
 	}
 
 	return nil
+}
+
+func (U *userStorage) PsqlFindPostId(searchTitle, searchEmail string) (uuid.UUID, error) {
+
 }
