@@ -2,21 +2,24 @@ package main
 
 import (
 	"github.com/TeenBanner/Inventory_system/cmd/config"
+	"github.com/TeenBanner/Inventory_system/pkg/authorization"
 	"github.com/TeenBanner/Inventory_system/pkg/database"
 	"github.com/TeenBanner/Inventory_system/pkg/database/migrations"
 	"log"
 )
 
 func main() {
-	err := config.LoadEnv()
-
+	if err := config.LoadEnv(); err != nil {
+		log.Fatal(err)
+	}
 	if err := config.ValidateEnvVars(); err != nil {
 		log.Fatalf("Cannot validate .env vars")
 	}
 
-	if err != nil {
-		log.Fatalf("Can't load .env")
+	if err := authorization.LoadFile("certificates/app.rsa", "certificates/app.rsa.pub"); err != nil {
+		log.Fatalf("No se pudieron cargar los certificados. ERR: %v", err)
 	}
+
 	connStr := config.CreateStrConn()
 
 	database.CreateConnection(connStr)
