@@ -3,38 +3,45 @@ package Services
 import (
 	"errors"
 	models2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
-	"github.com/google/uuid"
 )
 
-func (S *Service) GetByEmail(Email string) (models2.User, error) {
+func (S *Service) GetByEmail(Email string) (models2.UserDTO, error) {
 	if Email == "" {
-		return models2.User{}, errors.New("search email cannot be nil")
+		return models2.UserDTO{}, errors.New("search email cannot be nil")
 	}
 
 	user, err := S.UseCase.GetUserByEmail(Email)
 	if err != nil {
-		return models2.User{}, err
+		return models2.UserDTO{}, err
 	}
 
-	user.Password = ""
-	user.Posts = nil
-	user.ID = uuid.Nil
+	userToSend := models2.UserDTO{
+		ID:        user.ID,
+		Name:      user.Name,
+		Email:     user.Email,
+		CreatedAt: user.CreatedAt,
+	}
 
-	return user, nil
+	return userToSend, nil
 }
 
-func (S *Service) GetByName(name string) (models2.User, error) {
+func (S *Service) GetByName(name string) (models2.UserDTO, error) {
 	if name == "" {
-		return models2.User{}, errors.New("search name cannot be nil")
+		return models2.UserDTO{}, errors.New("search name cannot be nil")
 	}
 	user, err := S.UseCase.GetUserByName(name)
 	if err != nil {
-		return models2.User{}, err
+		return models2.UserDTO{}, err
 	}
 
-	user.Password = ""
+	UserToSend := models2.UserDTO{
+		ID:        user.ID,
+		Name:      user.Name,
+		Email:     user.Email,
+		CreatedAt: user.CreatedAt,
+	}
 
-	return user, nil
+	return UserToSend, nil
 }
 
 func (S *Service) GetPostsFromName(name string) ([]models2.Post, error) {
@@ -50,13 +57,23 @@ func (S *Service) GetPostsFromName(name string) ([]models2.Post, error) {
 	return posts, nil
 }
 
-func (S *Service) GetAllUsers() ([]models2.User, error) {
+func (S *Service) GetAllUsers() ([]models2.UserDTO, error) {
 	users, err := S.UseCase.GetAllUsers()
+	usersToSend := []models2.UserDTO{}
+	for _, user := range users {
+		userToSend := models2.UserDTO{
+			ID:        user.ID,
+			Name:      user.Name,
+			Email:     user.Email,
+			CreatedAt: user.CreatedAt,
+		}
+		usersToSend = append(usersToSend, userToSend)
+	}
 	if err != nil {
 		return nil, err
 	}
 
-	return users, nil
+	return usersToSend, nil
 }
 
 func (S *Service) GetAllPostsFromUser(email string) ([]models2.Post, error) {

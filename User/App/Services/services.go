@@ -21,10 +21,10 @@ type Services interface {
 
 	CreatePost(email string, post models2.CreatePost) (models2.Post, error)
 
-	GetByEmail(email string) (models2.User, error)
-	GetByName(name string) (models2.User, error)
+	GetByEmail(email string) (models2.UserDTO, error)
+	GetByName(name string) (models2.UserDTO, error)
 	GetPostsFromName(name string) ([]models2.Post, error)
-	GetAllUsers() ([]models2.User, error)
+	GetAllUsers() ([]models2.UserDTO, error)
 	GetAllPostsFromUser(email string) ([]models2.Post, error)
 	GetPostByTitleAndEmail(title string, email string) (models2.Post, error)
 	UpdateEmail(ActualEmail, NewEmail string) error
