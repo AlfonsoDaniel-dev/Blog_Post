@@ -7,7 +7,7 @@ const SqlCreateUserTable = `CREATE TABLE IF NOT EXISTS users (
     name varchar(40) NOT NULL,
     email varchar(255) NOT NULL,
     password varchar(255) NOT NULL,
-    is_admin bool NOT NULL,
+    is_admin bool NOT NULL DEFAULT false,
     created_at TIMESTAMP NOT NULL DEFAULT now(),
     updated_at TIMESTAMP,
     CONSTRAINT users_id_pk PRIMARY KEY (id),
@@ -16,12 +16,15 @@ const SqlCreateUserTable = `CREATE TABLE IF NOT EXISTS users (
 
 const SqlCreatePostTable = `CREATE TABLE IF NOT EXISTS posts (
     id uuid NOT NULL DEFAULT uuid_generate_v4(),
-    owner_id uuid NOT NULL,
+    owner_email varchar(255) NOT NULL,
     title varchar(255) NOT NULL,
     body varchar(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT now(),
+    updated_at TIMESTAMP,
     CONSTRAINT posts_id_pk PRIMARY KEY (id),
-    CONSTRAINT posts_owner_id_fk FOREIGN KEY (owner_id)
-    REFERENCES users (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+    CONSTRAINT posts_owner_id_fk FOREIGN KEY (owner_email)
+    REFERENCES users (email) ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT posts_unique_title_email_per_post_uq UNIQUE (title, owner_email)
 )`
 
 const addCreatedAndUpdatedAtToPosts = `ALTER TABLE IF EXISTS posts 

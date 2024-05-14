@@ -100,7 +100,7 @@ func (H *Handler) CreatePost(c echo.Context) error {
 	token := c.Request().Header.Get("Authorization")
 	email, err := authorization.GetEmailFromJWT(token)
 	if err != nil {
-		response := responses.NewResponse(nil, "Error", "Error getting user email")
+		response := responses.NewResponse(err, "Error", "Error getting user email")
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 
@@ -112,7 +112,7 @@ func (H *Handler) CreatePost(c echo.Context) error {
 
 	post, err := H.Services.CreatePost(email, data)
 	if err != nil {
-		response := responses.NewResponse(nil, "Error", "Error creating post")
+		response := responses.NewResponse(err, "Error", "Error creating post")
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 
