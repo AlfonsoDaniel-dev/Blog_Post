@@ -3,6 +3,7 @@ package UserDomain
 import (
 	"errors"
 	"fmt"
+	"github.com/TeenBanner/Inventory_system/Post/domain/model"
 	model2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
 	"golang.org/x/crypto/bcrypt"
 	"time"
@@ -18,7 +19,7 @@ func NewUser(storage UserStorage) *User {
 	}
 }
 
-func (u *User) Create(user model2.User) error {
+func (u *User) CreateUser(user model2.User) error {
 	user.CreatedAt = time.Now()
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 
@@ -29,18 +30,20 @@ func (u *User) Create(user model2.User) error {
 	}
 
 	user.Password = string(hashedPassword)
-	err = u.UserStorage.CreateUser(user)
+	err = u.UserStorage.PsqlCreateUser(user)
 	if err != nil {
 		return err
 	}
+
+	fmt.Println("Registe fallo en domain")
 
 	fmt.Println("User created")
 
 	return nil
 }
 
-func (u *User) GetUser(email string) (model2.User, error) {
-	user, err := u.GetUser(email)
+func (u *User) GetUserByEmail(email string) (model2.User, error) {
+	user, err := u.UserStorage.PsqlGetUserByEmail(email)
 	if err != nil {
 		return user, err
 	}
@@ -49,7 +52,10 @@ func (u *User) GetUser(email string) (model2.User, error) {
 }
 
 func (u *User) GetUserByName(name string) (model2.User, error) {
-	user, err := u.GetUserByName(name)
+	if name == "" {
+		return model2.User{}, errors.New("search name cannot be empty")
+	}
+	user, err := u.UserStorage.PsqlGetUserByName(name)
 
 	if err != nil {
 		return model2.User{}, err
@@ -58,7 +64,7 @@ func (u *User) GetUserByName(name string) (model2.User, error) {
 	return user, nil
 }
 
-func (u *User) UpdateEmail(ActualEmail, NewEmail string) error {
+func (u *User) UpdateUserEmail(ActualEmail, NewEmail string) error {
 	if NewEmail == ActualEmail {
 		return errors.New("user email can't be equal")
 	}
@@ -67,7 +73,7 @@ func (u *User) UpdateEmail(ActualEmail, NewEmail string) error {
 		return errors.New("user email can't be empty")
 	}
 
-	err := u.UpdateUserEmail(ActualEmail, NewEmail)
+	err := u.UserStorage.PsqlUpdateUserEmail(ActualEmail, NewEmail)
 	if err != nil {
 		return err
 	}
@@ -84,7 +90,7 @@ func (u *User) UpdateUserName(email, NewName string) error {
 		return errors.New("user name can't be empty")
 	}
 
-	err := u.UpdateUserName(email, NewName)
+	err := u.UserStorage.PsqlUpdateUserName(email, NewName)
 	if err != nil {
 		return err
 	}
@@ -92,9 +98,22 @@ func (u *User) UpdateUserName(email, NewName string) error {
 	return nil
 }
 
+func (u *User) GetPostsByName(name string) ([]model.Post, error) {
+	if name == "" {
+		return nil, errors.New("search name can't be empty")
+	}
+
+	posts, err := u.UserStorage.PsqlGetUserPosts(name)
+	if err != nil {
+		return nil, err
+	}
+
+	return posts, nil
+}
+
 // GetAllUsers admin functiond
-func (u *User) AdminGetAllUsers() ([]model2.User, error) {
-	users, err := u.GetAllUsers()
+func (u *User) GetAllUsers() ([]model2.User, error) {
+	users, err := u.PsqlGetAllUsers()
 	if err != nil {
 		return nil, err
 	}

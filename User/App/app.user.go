@@ -6,13 +6,14 @@ import (
 )
 
 type UseCase interface {
-	Create(user models2.User) error
-	GetByEmail(email string) (models2.User, error)
-	GetByName(name string) (models2.User, error)
-	UpdateEmail(ActualEmail, NewEmail string) error
+	CreateUser(user models2.User) error
+	GetUserByEmail(email string) (models2.User, error)
+	GetUserByName(name string) (models2.User, error)
+	UpdateUserEmail(ActualEmail, NewEmail string) error
 	UpdateUserName(email, NewName string) error
+	AreEqual(email, passwordToVerify string) (bool, error)
 
-	GetPosts(name string) ([]model.Post, error)
+	GetPostsByName(name string) ([]model.Post, error)
 
-	AdminGetAllUsers() ([]models2.User, error)
+	GetAllUsers() ([]models2.User, error)
 }

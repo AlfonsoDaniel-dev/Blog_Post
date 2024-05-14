@@ -7,14 +7,15 @@ import (
 
 // userStorage use user methods on DB
 type UserStorage interface {
-	CreateUser(user model2.User) error
-	GetUserByEmail(email string) (model2.User, error)
-	GetUserByName(name string) (model2.User, error)
-	UpdateUserName(email, name string) error
-	UpdateUserEmail(ActualEmail, NewEmail string) error
-	GetAllUsers() ([]model2.User, error)
+	PsqlCreateUser(user model2.User) error
+	PsqlGetUserByEmail(email string) (model2.User, error)
+	PsqlGetUserByName(name string) (model2.User, error)
+	PsqlUpdateUserName(email, name string) error
+	PsqlUpdateUserEmail(ActualEmail, NewEmail string) error
+	PsqlGetAllUsers() ([]model2.User, error)
 
-	GetUserPosts(name string) ([]model.Post, error)
+	PsqlGetUserPosts(name string) ([]model.Post, error)
+
+	PsqlLoginGetEmail(email string) (string, error)
+	PsqlLoginGetPassword(email string) (string, error)
 }
-
-// AdminStorage extends userStorge for Admin type functions

@@ -22,7 +22,7 @@ func NewPsqlUser(DB *sql.DB) *userStorage {
 }
 
 // User methods
-func (u *userStorage) CreateUser(user models2.User) error {
+func (u *userStorage) PsqlCreateUser(user models2.User) error {
 	stmt, err := u.db.Prepare(SqlCreateUserQuery)
 	if err != nil {
 		return err
@@ -50,7 +50,7 @@ func (u *userStorage) CreateUser(user models2.User) error {
 }
 
 // GetUser get info from a user
-func (u *userStorage) GetUserByEmail(email string) (models2.User, error) {
+func (u *userStorage) PsqlGetUserByEmail(email string) (models2.User, error) {
 	stmt, err := u.db.Prepare(SqlGetUser)
 	if err != nil {
 		return models2.User{}, err
@@ -71,7 +71,7 @@ func (u *userStorage) GetUserByEmail(email string) (models2.User, error) {
 	return user, nil
 }
 
-func (u *userStorage) GetUserPosts(name string) ([]model.Post, error) {
+func (u *userStorage) PsqlGetUserPosts(name string) ([]model.Post, error) {
 	stmt, err := u.db.Prepare(SqlGetUserPosts)
 	if err != nil {
 		return nil, err
@@ -101,7 +101,7 @@ func (u *userStorage) GetUserPosts(name string) ([]model.Post, error) {
 	return posts, nil
 }
 
-func (u *userStorage) UpdateUserName(email, name string) error {
+func (u *userStorage) PsqlUpdateUserName(email, name string) error {
 	stmt, err := u.db.Prepare(SqlUpdateUserName)
 	if err != nil {
 		return err
@@ -115,7 +115,7 @@ func (u *userStorage) UpdateUserName(email, name string) error {
 	return nil
 }
 
-func (u *userStorage) UpdateUserEmail(ActualEmail, NewEmail string) error {
+func (u *userStorage) PsqlUpdateUserEmail(ActualEmail, NewEmail string) error {
 	stmt, err := u.db.Prepare(SqlUpdateUserEmail)
 	if err != nil {
 		return err
@@ -133,11 +133,13 @@ func (u *userStorage) UpdateUserEmail(ActualEmail, NewEmail string) error {
 
 // AdminMethods
 
-func (u *userStorage) GetAllUsers() ([]models2.User, error) {
+func (u *userStorage) PsqlGetAllUsers() ([]models2.User, error) {
 	stmt, err := u.db.Prepare(SqlAdminGetAllUsers)
 	if err != nil {
 		return nil, err
 	}
+
+	defer stmt.Close()
 
 	rows, err := stmt.Query()
 	if err != nil {
@@ -150,6 +152,8 @@ func (u *userStorage) GetAllUsers() ([]models2.User, error) {
 
 		err := rows.Scan(&user.ID, &user.Name, &user.Email, &user.CreatedAt, &nullTime)
 		user.UpdatedAt = nullTime.Time
+
+		users = append(users, user)
 		if err != nil {
 			return nil, err
 		}
@@ -161,11 +165,12 @@ func (u *userStorage) GetAllUsers() ([]models2.User, error) {
 	return users, nil
 }
 
-func (U *userStorage) GetUserByName(name string) (models2.User, error) {
+func (U *userStorage) PsqlGetUserByName(name string) (models2.User, error) {
 	stmt, err := U.db.Prepare(SqlGetUserByName)
 	if err != nil {
 		return models2.User{}, err
 	}
+	defer stmt.Close()
 
 	user := models2.User{}
 
@@ -186,4 +191,40 @@ func (U *userStorage) GetUserByName(name string) (models2.User, error) {
 	user.UpdatedAt = nulltime.Time
 
 	return user, nil
+}
+
+func (U *userStorage) PsqlLoginGetEmail(email string) (string, error) {
+	stmt, err := U.db.Prepare(SqlLoginCompareEmails)
+	if err != nil {
+		return "", err
+	}
+
+	defer stmt.Close()
+
+	var DbEmail string
+	row := stmt.QueryRow(email)
+	err = row.Scan(&DbEmail)
+	if err != nil && DbEmail == "" {
+		return "", err
+	}
+
+	return DbEmail, nil
+}
+
+func (U *userStorage) PsqlLoginGetPassword(email string) (string, error) {
+	stmt, err := U.db.Prepare(SqlLoginGetHashdPasswordWithEmail)
+	if err != nil {
+		return "", err
+	}
+
+	defer stmt.Close()
+	var HashPassword string
+
+	row := stmt.QueryRow(email)
+	err = row.Scan(&HashPassword)
+	if err != nil && HashPassword == "" {
+		return "", err
+	}
+
+	return HashPassword, nil
 }
