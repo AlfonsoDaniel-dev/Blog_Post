@@ -30,11 +30,10 @@ func (U *User) GetUserPosts(email string) ([]model2.Post, error) {
 	}
 
 	posts, err := U.UserStorage.PsqlGetUserPosts(email)
+	fmt.Println(err)
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println("Fallo en domain")
 
 	return posts, nil
 }

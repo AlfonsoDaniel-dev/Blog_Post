@@ -5,12 +5,12 @@ import (
 	models2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
 )
 
-func (S *Service) GetByEmail(Email string) (models2.UserDTO, error) {
-	if Email == "" {
+func (S *Service) GetUserByEmail(email string) (models2.UserDTO, error) {
+	if email == "" {
 		return models2.UserDTO{}, errors.New("search email cannot be nil")
 	}
 
-	user, err := S.UseCase.GetUserByEmail(Email)
+	user, err := S.UseCase.GetUserByEmail(email)
 	if err != nil {
 		return models2.UserDTO{}, err
 	}
@@ -25,7 +25,7 @@ func (S *Service) GetByEmail(Email string) (models2.UserDTO, error) {
 	return userToSend, nil
 }
 
-func (S *Service) GetByName(name string) (models2.UserDTO, error) {
+func (S *Service) GetUserByName(name string) (models2.UserDTO, error) {
 	if name == "" {
 		return models2.UserDTO{}, errors.New("search name cannot be nil")
 	}
@@ -42,19 +42,6 @@ func (S *Service) GetByName(name string) (models2.UserDTO, error) {
 	}
 
 	return UserToSend, nil
-}
-
-func (S *Service) GetPostsFromName(name string) ([]models2.Post, error) {
-	if name == "" {
-		return nil, errors.New("search name cannot be nil")
-	}
-
-	posts, err := S.UseCase.GetPostsByName(name)
-	if err != nil {
-		return nil, err
-	}
-
-	return posts, nil
 }
 
 func (S *Service) GetAllUsers() ([]models2.UserDTO, error) {
@@ -76,7 +63,7 @@ func (S *Service) GetAllUsers() ([]models2.UserDTO, error) {
 	return usersToSend, nil
 }
 
-func (S *Service) GetAllPostsFromUser(email string) ([]models2.Post, error) {
+func (S *Service) GetAllPostsFromUserEmail(email string) ([]models2.Post, error) {
 	if email == "" {
 		return nil, errors.New("search email cannot be nil")
 	}

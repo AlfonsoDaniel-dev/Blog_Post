@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/TeenBanner/Inventory_system/User/App/Services"
 	models2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
 	"github.com/TeenBanner/Inventory_system/User/infrastructure/controllers/responses"
@@ -120,15 +121,16 @@ func (H *Handler) CreatePost(c echo.Context) error {
 	return c.JSON(http.StatusCreated, response)
 }
 
-func (H *Handler) GetPostsByEmail(c echo.Context) error {
+func (H *Handler) GetPostsByTitleAndEmail(c echo.Context) error {
 	if c.Request().Method != http.MethodGet {
 		response := responses.NewResponse(nil, "Error", "Method not allowed")
 		return c.JSON(http.StatusMethodNotAllowed, response)
 	}
 
+	title := c.Param("title")
 	email := c.Param("email")
 
-	posts, err := H.Services.GetAllPostsFromUser(email)
+	posts, err := H.Services.GetPostByTitleAndEmail(title, email)
 	if err != nil {
 		response := responses.NewResponse(err, "Error", "Error getting all posts")
 		return c.JSON(http.StatusInternalServerError, response)
@@ -138,15 +140,20 @@ func (H *Handler) GetPostsByEmail(c echo.Context) error {
 	return c.JSON(http.StatusOK, response)
 }
 
-func (H *Handler) GetAllPostsFromName(c echo.Context) error {
+func (H *Handler) GetAllPostsFromEmail(c echo.Context) error {
 	if c.Request().Method != http.MethodGet {
 		response := responses.NewResponse(nil, "Error", "Method not allowed")
 		return c.JSON(http.StatusMethodNotAllowed, response)
 	}
 
-	name := c.Param("name")
+	email := c.Param("email")
+	fmt.Println(email)
+	if email == "" {
+		response := responses.NewResponse(email, "Error", "Error getting user")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
 
-	posts, err := H.Services.GetAllPostsFromUser(name)
+	posts, err := H.Services.GetAllPostsFromUserEmail(email)
 	if err != nil {
 		response := responses.NewResponse(err, "Error", "Error getting all posts")
 		return c.JSON(http.StatusInternalServerError, response)

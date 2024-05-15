@@ -2,6 +2,7 @@ package psqlUser
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/TeenBanner/Inventory_system/User/Domain/model"
 	"github.com/TeenBanner/Inventory_system/pkg/database"
 	"github.com/google/uuid"
@@ -28,6 +29,7 @@ func (P *userStorage) PsqlCreatePost(email string, post model2.Post) error {
 
 func (u *userStorage) PsqlGetUserPosts(name string) ([]model2.Post, error) {
 	stmt, err := u.db.Prepare(SqlGetUserPosts)
+	fmt.Println(err)
 	if err != nil {
 		return nil, err
 	}
