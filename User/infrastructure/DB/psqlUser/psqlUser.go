@@ -62,7 +62,9 @@ func (u *userStorage) PsqlGetUserByEmail(email string) (models2.User, error) {
 		return models2.User{}, errors.New("user does not exist")
 	}
 	user := models2.User{}
-	err = row.Scan(&user.ID, &user.Name, &user.Email, &user.CreatedAt, &user.UpdatedAt)
+	nulltime := sql.NullTime{}
+	err = row.Scan(&user.ID, &user.Name, &user.Email, &user.CreatedAt, &nulltime)
+	user.UpdatedAt = nulltime.Time
 	if err != nil {
 		return models2.User{}, err
 	}

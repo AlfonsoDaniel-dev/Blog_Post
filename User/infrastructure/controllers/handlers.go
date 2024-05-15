@@ -184,3 +184,26 @@ func (H *Handler) GetPostsFromName(c echo.Context) error {
 	response := responses.NewResponse(posts, "Ok", "Posts Get Succesfully")
 	return c.JSON(http.StatusOK, response)
 }
+
+func (H *Handler) UserGetTheirInfo(c echo.Context) error {
+	if c.Request().Method != http.MethodGet {
+		response := responses.NewResponse(nil, "Error", "Mehod not allowe")
+		return c.JSON(http.StatusMethodNotAllowed, response)
+	}
+
+	token := c.Request().Header.Get("Authorization")
+
+	email, err := authorization.GetEmailFromJWT(token)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error while getting email from token")
+		return c.JSON(http.StatusForbidden, response)
+	}
+	info, err := H.Services.GetUserByEmail(email)
+	if err != nil {
+		response := responses.NewResponse(err, "Error", "Error getting user Data")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	response := responses.NewResponse(info, "Success", "User data delivered")
+	return c.JSON(http.StatusOK, response)
+}

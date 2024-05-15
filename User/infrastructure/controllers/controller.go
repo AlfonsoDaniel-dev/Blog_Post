@@ -18,6 +18,8 @@ type HanlderServices interface {
 	CreatePost(c echo.Context) error
 	GetAllPostsFromEmail(c echo.Context) error
 	GetPostsFromName(c echo.Context) error
+
+	UserGetTheirInfo(c echo.Context) error
 }
 
 type UserController struct {
@@ -48,6 +50,7 @@ func (h *UserController) PrivateRoutes(e *echo.Echo) {
 
 	users := e.Group("/api/v1/private")
 	users.Use(middlewares.AuthMiddleware)
+	users.GET("/user", h.HanlderServices.UserGetTheirInfo)
 	users.GET("/users", h.HanlderServices.GetAll)
 	users.POST("/post", h.HanlderServices.CreatePost)
 	users.GET("/", h.HanlderServices.GetAllPostsFromEmail)
