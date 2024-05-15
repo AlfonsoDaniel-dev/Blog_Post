@@ -3,6 +3,7 @@ package Services
 import (
 	"errors"
 	models2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
+	"strings"
 )
 
 func (S *Service) GetUserByEmail(email string) (models2.UserDTO, error) {
@@ -29,6 +30,9 @@ func (S *Service) GetUserByName(name string) (models2.UserDTO, error) {
 	if name == "" {
 		return models2.UserDTO{}, errors.New("search name cannot be nil")
 	}
+
+	name = strings.ReplaceAll(name, "_", " ")
+
 	user, err := S.UseCase.GetUserByName(name)
 	if err != nil {
 		return models2.UserDTO{}, err
@@ -48,6 +52,7 @@ func (S *Service) GetAllUsers() ([]models2.UserDTO, error) {
 	users, err := S.UseCase.GetAllUsers()
 	usersToSend := []models2.UserDTO{}
 	for _, user := range users {
+		user.Name = strings.ReplaceAll(user.Name, "_", " ")
 		userToSend := models2.UserDTO{
 			ID:        user.ID,
 			Name:      user.Name,
