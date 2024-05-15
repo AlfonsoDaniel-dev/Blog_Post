@@ -51,8 +51,8 @@ func (S *Service) GetUserByName(name string) (models2.UserDTO, error) {
 func (S *Service) GetAllUsers() ([]models2.UserDTO, error) {
 	users, err := S.UseCase.GetAllUsers()
 	usersToSend := []models2.UserDTO{}
-	for _, user := range users {
-		user.Name = strings.ReplaceAll(user.Name, "_", " ")
+	for i, user := range users {
+		users[i].Name = strings.ReplaceAll(users[i].Name, "_", " ")
 		userToSend := models2.UserDTO{
 			ID:        user.ID,
 			Name:      user.Name,
@@ -77,6 +77,12 @@ func (S *Service) GetAllPostsFromUserEmail(email string) ([]models2.Post, error)
 	if err != nil {
 		return nil, err
 	}
+	for i := range posts {
+		title := posts[i].Title
+
+		posts[i].Title = strings.ReplaceAll(title, "_", " ")
+	}
+
 	return posts, nil
 }
 
@@ -88,6 +94,11 @@ func (S *Service) GetAllPostsByTitle(title string) ([]models2.Post, error) {
 	posts, err := S.UseCase.FindPostsByTitle(title)
 	if err != nil {
 		return nil, err
+	}
+	for i := 0; i < len(posts); i++ {
+		title := posts[i].Title
+
+		posts[i].Title = strings.ReplaceAll(title, "_", " ")
 	}
 
 	return posts, nil
@@ -107,6 +118,8 @@ func (S *Service) GetPostByTitleAndEmail(searchTitle, searchEmail string) (model
 	if err != nil {
 		return models2.Post{}, err
 	}
+	title := strings.ReplaceAll(post.Title, "_", " ")
+	post.Title = title
 
 	return post, nil
 }
@@ -125,6 +138,12 @@ func (S *Service) GetAllPostsFromName(name string) ([]models2.Post, error) {
 	posts, err := S.UseCase.GetPostsByEmail(email)
 	if err != nil {
 		return nil, err
+	}
+
+	for i := 0; i < len(posts); i++ {
+		title := posts[i].Title
+
+		posts[i].Title = strings.ReplaceAll(title, "_", " ")
 	}
 
 	return posts, nil

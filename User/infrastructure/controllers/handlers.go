@@ -181,6 +181,6 @@ func (H *Handler) GetPostsFromName(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, response)
 	}
 
-	response := responses.NewResponse(posts, "Ok", "Error Obteniendo los posts")
+	response := responses.NewResponse(posts, "Ok", "Posts Get Succesfully")
 	return c.JSON(http.StatusOK, response)
 }
