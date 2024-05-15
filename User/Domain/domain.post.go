@@ -2,6 +2,7 @@ package Domain
 
 import (
 	"errors"
+	"fmt"
 	model2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
 	"github.com/google/uuid"
 	"time"
@@ -23,15 +24,17 @@ func (U *User) CreatePost(email string, post model2.Post) error {
 	return nil
 }
 
-func (U *User) GetUserPosts(name string) ([]model2.Post, error) {
-	if name == "" {
+func (U *User) GetUserPosts(email string) ([]model2.Post, error) {
+	if email == "" {
 		return nil, errors.New("please provide an valid email")
 	}
 
-	posts, err := U.UserStorage.PsqlGetUserPosts(name)
+	posts, err := U.UserStorage.PsqlGetUserPosts(email)
 	if err != nil {
 		return nil, err
 	}
+
+	fmt.Println("Fallo en domain")
 
 	return posts, nil
 }

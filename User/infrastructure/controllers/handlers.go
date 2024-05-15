@@ -137,3 +137,21 @@ func (H *Handler) GetPostsByEmail(c echo.Context) error {
 	response := responses.NewResponse(posts, "Success", "Posts retrieved")
 	return c.JSON(http.StatusOK, response)
 }
+
+func (H *Handler) GetAllPostsFromName(c echo.Context) error {
+	if c.Request().Method != http.MethodGet {
+		response := responses.NewResponse(nil, "Error", "Method not allowed")
+		return c.JSON(http.StatusMethodNotAllowed, response)
+	}
+
+	name := c.Param("name")
+
+	posts, err := H.Services.GetAllPostsFromUser(name)
+	if err != nil {
+		response := responses.NewResponse(err, "Error", "Error getting all posts")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	response := responses.NewResponse(posts, "Success", "Posts retrieved")
+	return c.JSON(http.StatusOK, response)
+}

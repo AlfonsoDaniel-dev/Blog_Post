@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"github.com/TeenBanner/Inventory_system/cmd/config"
 	"github.com/TeenBanner/Inventory_system/pkg/authorization"
 	"github.com/TeenBanner/Inventory_system/pkg/database"
 	"github.com/TeenBanner/Inventory_system/pkg/database/migrations"
 	"log"
+	"os"
 )
 
 func main() {
@@ -34,7 +36,12 @@ func main() {
 
 	e := config.NewHttp(db)
 
-	if err := e.Start(":8080"); err != nil {
+	port := os.Getenv("APP_PORT")
+	host := os.Getenv("APP_HOST")
+
+	dir := fmt.Sprintf("%v:%v", host, port)
+
+	if err := e.Start(dir); err != nil {
 		log.Fatalf("Can't start server: %v", err)
 	}
 }

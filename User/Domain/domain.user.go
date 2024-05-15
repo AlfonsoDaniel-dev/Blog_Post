@@ -34,8 +34,6 @@ func (u *User) CreateUser(user model2.User) error {
 		return err
 	}
 
-	fmt.Println("Registe fallo en domain")
-
 	fmt.Println("User created")
 
 	return nil

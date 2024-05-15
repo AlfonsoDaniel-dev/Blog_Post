@@ -85,7 +85,6 @@ func (S *Service) GetAllPostsFromUser(email string) ([]models2.Post, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return posts, nil
 }
 
