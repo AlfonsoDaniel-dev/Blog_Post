@@ -104,3 +104,16 @@ func (u *User) GetAllUsers() ([]model2.User, error) {
 
 	return users, nil
 }
+
+func (u *User) FindEmailByName(name string) (string, error) {
+	if name == "" {
+		return "", errors.New("please provide a valid searchName")
+	}
+
+	email, err := u.UserStorage.PsqlFindUserEmailByName(name)
+	if err != nil {
+		return "", err
+	}
+
+	return email, err
+}

@@ -27,7 +27,7 @@ func (P *userStorage) PsqlCreatePost(email string, post model2.Post) error {
 	return nil
 }
 
-func (u *userStorage) PsqlGetUserPosts(name string) ([]model2.Post, error) {
+func (u *userStorage) PsqlGetUserPosts(email string) ([]model2.Post, error) {
 	stmt, err := u.db.Prepare(SqlGetUserPosts)
 	fmt.Println(err)
 	if err != nil {
@@ -36,7 +36,7 @@ func (u *userStorage) PsqlGetUserPosts(name string) ([]model2.Post, error) {
 
 	defer stmt.Close()
 
-	rows, err := stmt.Query(name)
+	rows, err := stmt.Query(email)
 
 	posts := []model2.Post{}
 	for rows.Next() {

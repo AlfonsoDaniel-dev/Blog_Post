@@ -9,3 +9,4 @@ const SqlGetUserByName = `SELECT id, name, email, created_at, updated_at FROM us
 const SqlLoginCompareEmails = `SELECT email FROM users WHERE email = $1`
 const SqlLoginGetHashdPasswordWithEmail = `SELECT password FROM users WHERE email = $1`
 const SqlGetUserName = `SELECT name FROM users WHERE email = $1`
+const SqlFindUserEmailByName = `SELECT email FROM users WHERE name = $1`

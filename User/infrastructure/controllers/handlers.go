@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"github.com/TeenBanner/Inventory_system/User/App/Services"
 	models2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
 	"github.com/TeenBanner/Inventory_system/User/infrastructure/controllers/responses"
@@ -146,8 +145,13 @@ func (H *Handler) GetAllPostsFromEmail(c echo.Context) error {
 		return c.JSON(http.StatusMethodNotAllowed, response)
 	}
 
-	email := c.Param("email")
-	fmt.Println(email)
+	token := c.Request().Header.Get("Authorization")
+	email, err := authorization.GetEmailFromJWT(token)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error Getting userPosts")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
 	if email == "" {
 		response := responses.NewResponse(email, "Error", "Error getting user")
 		return c.JSON(http.StatusInternalServerError, response)
@@ -160,5 +164,23 @@ func (H *Handler) GetAllPostsFromEmail(c echo.Context) error {
 	}
 
 	response := responses.NewResponse(posts, "Success", "Posts retrieved")
+	return c.JSON(http.StatusOK, response)
+}
+
+func (H *Handler) GetPostsFromName(c echo.Context) error {
+	if c.Request().Method != http.MethodGet {
+		response := responses.NewResponse(nil, "Error", "Method not allowed")
+		return c.JSON(http.StatusMethodNotAllowed, response)
+	}
+
+	name := c.Param("name")
+
+	posts, err := H.Services.GetAllPostsFromName(name)
+	if err != nil {
+		response := responses.NewResponse(err, "ERROR", "Error obteniendo los posts")
+		return c.JSON(http.StatusNotFound, response)
+	}
+
+	response := responses.NewResponse(posts, "Ok", "Error Obteniendo los posts")
 	return c.JSON(http.StatusOK, response)
 }

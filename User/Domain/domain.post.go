@@ -38,12 +38,12 @@ func (U *User) GetUserPosts(email string) ([]model2.Post, error) {
 	return posts, nil
 }
 
-func (U *User) GetPostsByName(name string) ([]model2.Post, error) {
-	if name == "" {
-		return nil, errors.New("search name can't be empty")
+func (U *User) GetPostsByEmail(Email string) ([]model2.Post, error) {
+	if Email == "" {
+		return nil, errors.New("search Email can't be empty")
 	}
 
-	posts, err := U.UserStorage.PsqlGetUserPosts(name)
+	posts, err := U.UserStorage.PsqlGetUserPosts(Email)
 	if err != nil {
 		return nil, err
 	}

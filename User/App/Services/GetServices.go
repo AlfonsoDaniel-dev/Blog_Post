@@ -110,3 +110,22 @@ func (S *Service) GetPostByTitleAndEmail(searchTitle, searchEmail string) (model
 
 	return post, nil
 }
+
+func (S *Service) GetAllPostsFromName(name string) ([]models2.Post, error) {
+	if name == "" {
+		return nil, errors.New("please provide a valid SearchName")
+	}
+
+	name = strings.ReplaceAll(name, " ", "_")
+	email, err := S.UseCase.FindEmailByName(name)
+	if err != nil {
+		return nil, err
+	}
+
+	posts, err := S.UseCase.GetPostsByEmail(email)
+	if err != nil {
+		return nil, err
+	}
+
+	return posts, nil
+}

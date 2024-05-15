@@ -13,10 +13,12 @@ type UseCase interface {
 	UpdateUserName(email, NewName string) error
 	AreEqual(email, passwordToVerify string) (bool, error)
 
+	FindEmailByName(name string) (string, error)
+
 	CreatePost(email string, post model2.Post) error
 	GetUserPosts(email string) ([]model2.Post, error)
 	FindPostId(searchEmail, searchTitle string) (uuid.UUID, error)
-	GetPostsByName(name string) ([]model2.Post, error)
+	GetPostsByEmail(name string) ([]model2.Post, error)
 	FindPostsByTitle(title string) ([]model2.Post, error)
 	FindPostById(postId uuid.UUID) (model2.Post, error)
 

@@ -26,6 +26,7 @@ type Services interface {
 	GetAllUsers() ([]models2.UserDTO, error)
 	GetAllPostsFromUserEmail(email string) ([]models2.Post, error)
 	GetPostByTitleAndEmail(title string, email string) (models2.Post, error)
+	GetAllPostsFromName(name string) ([]models2.Post, error)
 	UpdateEmail(ActualEmail, NewEmail string) error
 	UpdateName(email, NewName string) error
 }

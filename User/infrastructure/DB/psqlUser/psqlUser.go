@@ -219,3 +219,23 @@ func (U *userStorage) PsqlLoginGetPassword(email string) (string, error) {
 
 	return HashPassword, nil
 }
+
+func (U *userStorage) PsqlFindUserEmailByName(name string) (string, error) {
+	stmt, err := U.db.Prepare(SqlFindUserEmailByName)
+	if err != nil {
+		return "", err
+	}
+
+	defer stmt.Close()
+
+	var email string
+
+	row := stmt.QueryRow(name)
+
+	err = row.Scan(&email)
+	if err != nil {
+		return "", err
+	}
+
+	return email, nil
+}
