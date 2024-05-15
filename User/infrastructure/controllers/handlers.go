@@ -50,7 +50,7 @@ func (U *Handler) Register(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 
-	response := responses.NewResponse(map[string]string{"token": token}, "Success", "User created")
+	response := responses.NewResponse(map[string]any{"token": token, "user": data}, "Success", "User created")
 	return c.JSON(http.StatusCreated, response)
 }
 
@@ -71,7 +71,7 @@ func (U *Handler) Login(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 
-	response := responses.NewResponse(token, "Login Success", "User Logged In")
+	response := responses.NewResponse(map[string]string{"token": token}, "Login Success", "User Logged In")
 	return c.JSON(http.StatusOK, response)
 }
 
