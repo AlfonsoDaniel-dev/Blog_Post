@@ -1,6 +1,6 @@
 package model2
 
 type UpdateNameForm struct {
-	Login
-	NewName string `json:"name"`
+	Password string `json:"password"`
+	NewName  string `json:"name"`
 }

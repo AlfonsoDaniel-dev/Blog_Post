@@ -20,10 +20,11 @@ type HanlderServices interface {
 	GetAllPostsFromEmail(c echo.Context) error
 	GetPostsFromName(c echo.Context) error
 
-	UpdateUserEmail(c echo.Context) error
+	UserUpdateTheirEmail(c echo.Context) error
+	UserUpdateTheirName(c echo.Context) error
+	UserUpdateTheirPassword(c echo.Context) error
 
 	UserGetTheirInfo(c echo.Context) error
-	UserUpdateTheirName(c echo.Context) error
 
 	GetAll(c echo.Context) error
 }
@@ -63,8 +64,9 @@ func (h *UserController) PrivateRoutes(e *echo.Echo) {
 
 	users.POST("/post", h.HanlderServices.CreatePost)
 
+	users.PUT("/user/email", h.HanlderServices.UserUpdateTheirEmail)
 	users.PUT("/user/name", h.HanlderServices.UserUpdateTheirName)
-	users.PUT("/user/email", h.HanlderServices.UpdateUserEmail)
+	users.PUT("/user/password", h.HanlderServices.UserUpdateTheirPassword)
 }
 func (h *UserController) PublicRoutes(e *echo.Echo) {
 

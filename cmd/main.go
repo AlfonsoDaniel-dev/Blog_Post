@@ -18,7 +18,7 @@ func main() {
 		log.Fatalf("Cannot validate .env vars")
 	}
 
-	if err := authorization.LoadFile("certificates/app.rsa", "certificates/app.rsa.pub"); err != nil {
+	if err := authorization.LoadFile("cmd/certificates/app.rsa", "cmd/certificates/app.rsa.pub"); err != nil {
 		log.Fatalf("No se pudieron cargar los certificados. ERR: %v", err)
 	}
 

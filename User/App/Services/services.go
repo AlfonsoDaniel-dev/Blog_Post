@@ -20,8 +20,8 @@ type Services interface {
 	Login(user models2.Login) (string, error)
 
 	UpdateEmail(actualEmail string, form models2.UpdateEmailForm) error
-	UpdatePassword(form models2.UpdatePasswordForm) error
-	UpdateName(form models2.UpdateNameForm) error
+	UpdatePassword(email string, form models2.UpdatePasswordForm) error
+	UpdateName(email string, form models2.UpdateNameForm) error
 
 	CreatePost(email string, post models2.CreatePost) (models2.Post, error)
 

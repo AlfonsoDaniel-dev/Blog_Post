@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"github.com/TeenBanner/Inventory_system/User/App/Services"
 	models2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
 	"github.com/TeenBanner/Inventory_system/User/infrastructure/controllers/responses"
@@ -231,15 +232,13 @@ func (H *Handler) UserUpdateTheirName(c echo.Context) error {
 		return c.JSON(http.StatusForbidden, response)
 	}
 
-	data.Email = email
-
-	err = H.Services.UpdateName(data)
+	err = H.Services.UpdateName(email, data)
 
 	response := responses.NewResponse(data, "Succes", "Name updated Succesfully")
 	return c.JSON(http.StatusOK, response)
 }
 
-func (H *Handler) UpdateUserEmail(c echo.Context) error {
+func (H *Handler) UserUpdateTheirEmail(c echo.Context) error {
 	if c.Request().Method != http.MethodPut {
 		response := responses.NewResponse(nil, "Error", "Method not allowed")
 		return c.JSON(http.StatusMethodNotAllowed, response)
@@ -265,23 +264,19 @@ func (H *Handler) UpdateUserEmail(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 
-	response := responses.NewResponse(nil, "Success", "Email updated Succesfully")
+	response := responses.NewResponse(data, "Success", "Email updated Succesfully")
 	return c.JSON(http.StatusOK, response)
 }
 
-func (H *Handler) UpdatePassword(c echo.Context) error {
+func (H *Handler) UserUpdateTheirPassword(c echo.Context) error {
 	if c.Request().Method != http.MethodPut {
 		response := responses.NewResponse(nil, "Error", "Method not allowed")
 		return c.JSON(http.StatusMethodNotAllowed, response)
 	}
+
 	token := c.Request().Header.Get("Authorization")
 
 	email, err := authorization.GetEmailFromJWT(token)
-	if err != nil {
-		response := responses.NewResponse(nil, "Error", "Error while getting email from token")
-		return c.JSON(http.StatusForbidden, response)
-	}
-
 	data := models2.UpdatePasswordForm{}
 
 	err = c.Bind(&data)
@@ -290,14 +285,13 @@ func (H *Handler) UpdatePassword(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, response)
 	}
 
-	data.Email = email
-
-	err = H.Services.UpdatePassword(data)
+	err = H.Services.UpdatePassword(email, data)
+	fmt.Println(err)
 	if err != nil {
 		response := responses.NewResponse(err, "Error", "Error While updating password")
 		return c.JSON(http.StatusInternalServerError, response)
 	}
 
-	response := responses.NewResponse(nil, "Success", "Password updated Succesfully")
+	response := responses.NewResponse(data, "Success", "Password updated Succesfully")
 	return c.JSON(http.StatusOK, response)
 }

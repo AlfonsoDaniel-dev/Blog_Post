@@ -11,7 +11,7 @@ import (
 var envVars = []string{"DB_HOST", "DB_PORT", "DB_USER", "DB_PASSWORD", "DB_NAME", "APP_HOST", "APP_PORT", "ALLOWED_ORIGINS"}
 
 func LoadEnv() error {
-	err := godotenv.Load("../.env")
+	err := godotenv.Load(".env")
 	if err != nil {
 		return err
 	}

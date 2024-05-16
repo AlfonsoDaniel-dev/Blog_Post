@@ -6,6 +6,7 @@ import (
 	models2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
 	"github.com/TeenBanner/Inventory_system/pkg/database"
 	"log"
+	"time"
 )
 
 // UserStorage it's used for interact with DB
@@ -101,7 +102,8 @@ func (u *userStorage) PsqlUpdateUserName(email, name string) error {
 	}
 
 	defer stmt.Close()
-	_, err = stmt.Exec(name, email)
+	update_time := time.Now()
+	_, err = stmt.Exec(name, update_time, email)
 	if err != nil {
 		return err
 	}
@@ -116,7 +118,8 @@ func (u *userStorage) PsqlUpdateUserEmail(ActualEmail, NewEmail string) error {
 
 	defer stmt.Close()
 
-	_, err = stmt.Exec(NewEmail, ActualEmail)
+	update_time := time.Now()
+	_, err = stmt.Exec(NewEmail, update_time, ActualEmail)
 	if err != nil {
 		return err
 	}
@@ -131,8 +134,8 @@ func (U *userStorage) PsqlUpdateUserPassword(Email, NewPassword string) error {
 	}
 
 	defer stmt.Close()
-
-	_, err = stmt.Exec(NewPassword, Email)
+	update_time := time.Now()
+	_, err = stmt.Exec(NewPassword, update_time, Email)
 	if err != nil {
 		return err
 	}
