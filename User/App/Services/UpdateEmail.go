@@ -10,7 +10,7 @@ func (S *Service) UpdateEmail(actualEmail string, form models2.UpdateEmailForm) 
 		return errors.New("Email or Password is empty")
 	}
 
-	ok, err := S.UseCase.AreEqual(form.Email, form.Password)
+	ok, err := S.UseCase.AreEqual(actualEmail, form.Password)
 	if err != nil || !ok {
 		return errors.New("email or Password is wrong")
 	}
