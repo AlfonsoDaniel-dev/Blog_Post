@@ -12,14 +12,20 @@ import (
 
 type HanlderServices interface {
 	Register(c echo.Context) error
-	GetAll(c echo.Context) error
 	Login(c echo.Context) error
-	GetPostsByTitleAndEmail(c echo.Context) error
+
 	CreatePost(c echo.Context) error
+
+	GetPostsByTitleAndEmail(c echo.Context) error
 	GetAllPostsFromEmail(c echo.Context) error
 	GetPostsFromName(c echo.Context) error
 
+	UpdateUserEmail(c echo.Context) error
+
 	UserGetTheirInfo(c echo.Context) error
+	UserUpdateTheirName(c echo.Context) error
+
+	GetAll(c echo.Context) error
 }
 
 type UserController struct {
@@ -50,11 +56,15 @@ func (h *UserController) PrivateRoutes(e *echo.Echo) {
 
 	users := e.Group("/api/v1/private")
 	users.Use(middlewares.AuthMiddleware)
-	users.GET("/user", h.HanlderServices.UserGetTheirInfo)
-	users.GET("/users", h.HanlderServices.GetAll)
-	users.POST("/post", h.HanlderServices.CreatePost)
-	users.GET("/", h.HanlderServices.GetAllPostsFromEmail)
 
+	users.GET("/user", h.HanlderServices.UserGetTheirInfo)
+	users.GET("/", h.HanlderServices.GetAllPostsFromEmail)
+	users.GET("/users", h.HanlderServices.GetAll)
+
+	users.POST("/post", h.HanlderServices.CreatePost)
+
+	users.PUT("/user/name", h.HanlderServices.UserUpdateTheirName)
+	users.PUT("/user/email", h.HanlderServices.UpdateUserEmail)
 }
 func (h *UserController) PublicRoutes(e *echo.Echo) {
 

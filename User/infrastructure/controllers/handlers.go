@@ -207,3 +207,62 @@ func (H *Handler) UserGetTheirInfo(c echo.Context) error {
 	response := responses.NewResponse(info, "Success", "User data delivered")
 	return c.JSON(http.StatusOK, response)
 }
+
+func (H *Handler) UserUpdateTheirName(c echo.Context) error {
+	if c.Request().Method != http.MethodPut {
+		response := responses.NewResponse(nil, "Error", "Method not allowed")
+		return c.JSON(http.StatusMethodNotAllowed, response)
+	}
+
+	token := c.Request().Header.Get("Authorization")
+
+	data := models2.UpdateNameForm{}
+
+	err := c.Bind(&data)
+
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Request bad structured")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	email, err := authorization.GetEmailFromJWT(token)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error while getting email from token")
+		return c.JSON(http.StatusForbidden, response)
+	}
+
+	err = H.Services.UpdateName(email, data.Name)
+
+	response := responses.NewResponse(data, "Succes", "Name updated Succesfully")
+	return c.JSON(http.StatusOK, response)
+}
+
+func (H *Handler) UpdateUserEmail(c echo.Context) error {
+	if c.Request().Method != http.MethodPut {
+		response := responses.NewResponse(nil, "Error", "Method not allowed")
+		return c.JSON(http.StatusMethodNotAllowed, response)
+	}
+
+	token := c.Request().Header.Get("Authorization")
+	email, err := authorization.GetEmailFromJWT(token)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error while getting email from token")
+		return c.JSON(http.StatusForbidden, response)
+	}
+
+	data := models2.UpdateEmailForm{}
+	err = c.Bind(&data)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Request bad structured")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	err = H.Services.UpdateEmail(email, data)
+	if err != nil {
+		response := responses.NewResponse(err, "Error", "Error While updating email")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	response := responses.NewResponse(nil, "Success", "Email updated Succesfully")
+	return c.JSON(http.StatusOK, response)
+}
