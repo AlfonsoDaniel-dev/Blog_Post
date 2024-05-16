@@ -5,6 +5,7 @@ import (
 	"fmt"
 	models2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
 	"github.com/google/uuid"
+	"strings"
 )
 
 func (S Service) Register(user models2.Register) error {
@@ -21,6 +22,8 @@ func (S Service) Register(user models2.Register) error {
 	}
 
 	Id := uuid.New()
+
+	user.Name = strings.ReplaceAll(user.Name, " ", "_")
 
 	userRecord := models2.User{
 		ID:       Id,

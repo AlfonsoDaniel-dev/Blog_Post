@@ -3,10 +3,10 @@ package psqlUser
 import (
 	"database/sql"
 	"errors"
-	"github.com/TeenBanner/Inventory_system/Post/domain/model"
 	models2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
 	"github.com/TeenBanner/Inventory_system/pkg/database"
 	"log"
+	"time"
 )
 
 // UserStorage it's used for interact with DB
@@ -63,7 +63,9 @@ func (u *userStorage) PsqlGetUserByEmail(email string) (models2.User, error) {
 		return models2.User{}, errors.New("user does not exist")
 	}
 	user := models2.User{}
-	err = row.Scan(&user.ID, &user.Name, &user.Email, &user.CreatedAt, &user.UpdatedAt)
+	nulltime := sql.NullTime{}
+	err = row.Scan(&user.ID, &user.Name, &user.Email, &user.CreatedAt, &nulltime)
+	user.UpdatedAt = nulltime.Time
 	if err != nil {
 		return models2.User{}, err
 	}
@@ -71,34 +73,26 @@ func (u *userStorage) PsqlGetUserByEmail(email string) (models2.User, error) {
 	return user, nil
 }
 
-func (u *userStorage) PsqlGetUserPosts(name string) ([]model.Post, error) {
-	stmt, err := u.db.Prepare(SqlGetUserPosts)
+func (U *userStorage) PsqlGetUserName(email string) (string, error) {
+	stmt, err := U.db.Prepare(SqlGetUserName)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
 	defer stmt.Close()
 
-	rows, err := stmt.Query(name)
-
-	posts := []model.Post{}
-	for rows.Next() {
-		post := model.Post{}
-
-		nullTime := sql.NullTime{}
-		err := rows.Scan(&post.ID, &post.Title, &post.Body, &post.OwnerId, &post.CreatedAt, &nullTime)
-		post.UpdatedAt = nullTime.Time
-		if err != nil {
-			return nil, err
-		}
-
-		posts = append(posts, post)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
+	row, err := stmt.Query(email)
+	if err != nil {
+		return "", err
 	}
 
-	return posts, nil
+	var name string
+	err = row.Scan(&name)
+	if err != nil {
+		return "", err
+	}
+
+	return name, nil
 }
 
 func (u *userStorage) PsqlUpdateUserName(email, name string) error {
@@ -108,7 +102,8 @@ func (u *userStorage) PsqlUpdateUserName(email, name string) error {
 	}
 
 	defer stmt.Close()
-	_, err = stmt.Exec(name, email)
+	update_time := time.Now()
+	_, err = stmt.Exec(name, update_time, email)
 	if err != nil {
 		return err
 	}
@@ -123,7 +118,24 @@ func (u *userStorage) PsqlUpdateUserEmail(ActualEmail, NewEmail string) error {
 
 	defer stmt.Close()
 
-	_, err = stmt.Exec(NewEmail, ActualEmail)
+	update_time := time.Now()
+	_, err = stmt.Exec(NewEmail, update_time, ActualEmail)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (U *userStorage) PsqlUpdateUserPassword(Email, NewPassword string) error {
+	stmt, err := U.db.Prepare(SqlUpdateUserPassword)
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+	update_time := time.Now()
+	_, err = stmt.Exec(NewPassword, update_time, Email)
 	if err != nil {
 		return err
 	}
@@ -227,4 +239,24 @@ func (U *userStorage) PsqlLoginGetPassword(email string) (string, error) {
 	}
 
 	return HashPassword, nil
+}
+
+func (U *userStorage) PsqlFindUserEmailByName(name string) (string, error) {
+	stmt, err := U.db.Prepare(SqlFindUserEmailByName)
+	if err != nil {
+		return "", err
+	}
+
+	defer stmt.Close()
+
+	var email string
+
+	row := stmt.QueryRow(name)
+
+	err = row.Scan(&email)
+	if err != nil {
+		return "", err
+	}
+
+	return email, nil
 }

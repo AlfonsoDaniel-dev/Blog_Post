@@ -1,9 +1,8 @@
-package UserDomain
+package Domain
 
 import (
 	"errors"
 	"fmt"
-	"github.com/TeenBanner/Inventory_system/Post/domain/model"
 	model2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
 	"golang.org/x/crypto/bcrypt"
 	"time"
@@ -34,8 +33,6 @@ func (u *User) CreateUser(user model2.User) error {
 	if err != nil {
 		return err
 	}
-
-	fmt.Println("Registe fallo en domain")
 
 	fmt.Println("User created")
 
@@ -98,17 +95,22 @@ func (u *User) UpdateUserName(email, NewName string) error {
 	return nil
 }
 
-func (u *User) GetPostsByName(name string) ([]model.Post, error) {
-	if name == "" {
-		return nil, errors.New("search name can't be empty")
+func (u *User) UpdateUserPassword(email, NewPassword string) error {
+	if email == "" || NewPassword == "" {
+		return errors.New("please provide a valid email or password")
 	}
 
-	posts, err := u.UserStorage.PsqlGetUserPosts(name)
+	hashPassword, err := bcrypt.GenerateFromPassword([]byte(NewPassword), bcrypt.DefaultCost)
 	if err != nil {
-		return nil, err
+		return errors.New("Error while hashing password")
 	}
 
-	return posts, nil
+	err = u.UserStorage.PsqlUpdateUserPassword(email, string(hashPassword))
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // GetAllUsers admin functiond
@@ -119,4 +121,17 @@ func (u *User) GetAllUsers() ([]model2.User, error) {
 	}
 
 	return users, nil
+}
+
+func (u *User) FindEmailByName(name string) (string, error) {
+	if name == "" {
+		return "", errors.New("please provide a valid searchName")
+	}
+
+	email, err := u.UserStorage.PsqlFindUserEmailByName(name)
+	if err != nil {
+		return "", err
+	}
+
+	return email, err
 }

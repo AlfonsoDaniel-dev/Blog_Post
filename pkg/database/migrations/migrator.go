@@ -113,7 +113,7 @@ func (m *Migrator) Migrate(db *sql.DB) error {
 		return err
 	}
 
-	if err := m.MigrateExtension(tx, hacer_is_admin_Default_false); err != nil {
+	if err := m.MigrateExtension(tx, SqlCreateUuidExtension); err != nil {
 		tx.Rollback()
 		return err
 	}
@@ -123,7 +123,7 @@ func (m *Migrator) Migrate(db *sql.DB) error {
 		return err
 	}
 
-	if err := m.MigrateTablePosts(tx, Add_email_constraint); err != nil {
+	if err := m.MigrateTablePosts(tx, SqlCreatePostTable); err != nil {
 		tx.Rollback()
 		return err
 	}

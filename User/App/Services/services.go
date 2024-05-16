@@ -1,7 +1,6 @@
 package Services
 
 import (
-	"github.com/TeenBanner/Inventory_system/Post/domain/model"
 	UserApp "github.com/TeenBanner/Inventory_system/User/App"
 	models2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
 )
@@ -20,11 +19,16 @@ type Services interface {
 	Register(user models2.Register) error
 	Login(user models2.Login) (string, error)
 
-	GetByEmail(email string) (models2.User, error)
-	GetByName(name string) (models2.User, error)
-	GetPostsFromName(name string) ([]model.Post, error)
-	GetAllUsers() ([]models2.User, error)
+	UpdateEmail(actualEmail string, form models2.UpdateEmailForm) error
+	UpdatePassword(email string, form models2.UpdatePasswordForm) error
+	UpdateName(email string, form models2.UpdateNameForm) error
 
-	UpdateEmail(ActualEmail, NewEmail string) error
-	UpdateName(email, NewName string) error
+	CreatePost(email string, post models2.CreatePost) (models2.Post, error)
+
+	GetUserByEmail(email string) (models2.UserDTO, error)
+	GetUserByName(name string) (models2.UserDTO, error)
+	GetAllUsers() ([]models2.UserDTO, error)
+	GetAllPostsFromUserEmail(email string) ([]models2.Post, error)
+	GetPostByTitleAndEmail(title string, email string) (models2.Post, error)
+	GetAllPostsFromName(name string) ([]models2.Post, error)
 }

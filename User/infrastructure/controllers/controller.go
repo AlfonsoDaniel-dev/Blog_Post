@@ -3,7 +3,7 @@ package controllers
 import (
 	"database/sql"
 	"github.com/TeenBanner/Inventory_system/User/App/Services"
-	UserDomain "github.com/TeenBanner/Inventory_system/User/Domain"
+	Domain "github.com/TeenBanner/Inventory_system/User/Domain"
 	"github.com/TeenBanner/Inventory_system/User/infrastructure/DB/psqlUser"
 	"github.com/TeenBanner/Inventory_system/pkg/middlewares"
 	"github.com/labstack/echo/v4"
@@ -12,8 +12,21 @@ import (
 
 type HanlderServices interface {
 	Register(c echo.Context) error
-	GetAll(c echo.Context) error
 	Login(c echo.Context) error
+
+	CreatePost(c echo.Context) error
+
+	GetPostsByTitleAndEmail(c echo.Context) error
+	GetAllPostsFromEmail(c echo.Context) error
+	GetPostsFromName(c echo.Context) error
+
+	UserUpdateTheirEmail(c echo.Context) error
+	UserUpdateTheirName(c echo.Context) error
+	UserUpdateTheirPassword(c echo.Context) error
+
+	UserGetTheirInfo(c echo.Context) error
+
+	GetAll(c echo.Context) error
 }
 
 type UserController struct {
@@ -29,7 +42,7 @@ func NewUserRouter(e *echo.Echo, db *sql.DB) {
 
 func BuildUserController(e *echo.Echo, DB *sql.DB) *UserController {
 	UserStorage := psqlUser.NewPsqlUser(DB)
-	user := UserDomain.NewUser(UserStorage)
+	user := Domain.NewUser(UserStorage)
 	service := Services.NewServices(user)
 
 	handler := NewHandler(service)
@@ -44,13 +57,24 @@ func (h *UserController) PrivateRoutes(e *echo.Echo) {
 
 	users := e.Group("/api/v1/private")
 	users.Use(middlewares.AuthMiddleware)
+
+	users.GET("/user", h.HanlderServices.UserGetTheirInfo)
+	users.GET("/", h.HanlderServices.GetAllPostsFromEmail)
 	users.GET("/users", h.HanlderServices.GetAll)
+
+	users.POST("/post", h.HanlderServices.CreatePost)
+
+	users.PUT("/user/email", h.HanlderServices.UserUpdateTheirEmail)
+	users.PUT("/user/name", h.HanlderServices.UserUpdateTheirName)
+	users.PUT("/user/password", h.HanlderServices.UserUpdateTheirPassword)
 }
 func (h *UserController) PublicRoutes(e *echo.Echo) {
 
 	e.Use(middleware.Recover())
 
 	public := e.Group("/api/v1/public")
+	public.GET("/:name", h.HanlderServices.GetPostsFromName)
+	public.GET("/:title/:email", h.HanlderServices.GetPostsByTitleAndEmail)
 	public.POST("/register", h.HanlderServices.Register)
 	public.POST("/Login", h.HanlderServices.Login)
 }
