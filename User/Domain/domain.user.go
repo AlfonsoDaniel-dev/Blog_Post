@@ -95,6 +95,24 @@ func (u *User) UpdateUserName(email, NewName string) error {
 	return nil
 }
 
+func (u *User) UpdateUserPassword(email, NewPassword string) error {
+	if email == "" || NewPassword == "" {
+		return errors.New("please provide a valid email or password")
+	}
+
+	hashPassword, err := bcrypt.GenerateFromPassword([]byte(NewPassword), bcrypt.DefaultCost)
+	if err != nil {
+		return errors.New("Error while hashing password")
+	}
+
+	err = u.UserStorage.PsqlUpdateUserPassword(email, string(hashPassword))
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // GetAllUsers admin functiond
 func (u *User) GetAllUsers() ([]model2.User, error) {
 	users, err := u.PsqlGetAllUsers()

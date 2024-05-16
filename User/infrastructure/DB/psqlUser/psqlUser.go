@@ -124,6 +124,22 @@ func (u *userStorage) PsqlUpdateUserEmail(ActualEmail, NewEmail string) error {
 	return nil
 }
 
+func (U *userStorage) PsqlUpdateUserPassword(Email, NewPassword string) error {
+	stmt, err := U.db.Prepare(SqlUpdateUserPassword)
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(NewPassword, Email)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // AdminMethods
 
 func (u *userStorage) PsqlGetAllUsers() ([]models2.User, error) {

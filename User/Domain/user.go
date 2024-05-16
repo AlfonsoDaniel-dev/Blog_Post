@@ -10,8 +10,11 @@ type UserStorage interface {
 	PsqlCreateUser(user model2.User) error
 	PsqlGetUserByEmail(email string) (model2.User, error)
 	PsqlGetUserByName(name string) (model2.User, error)
+
 	PsqlUpdateUserName(email, name string) error
 	PsqlUpdateUserEmail(ActualEmail, NewEmail string) error
+	PsqlUpdateUserPassword(email, password string) error
+
 	PsqlGetAllUsers() ([]model2.User, error)
 	PsqlFindUserEmailByName(name string) (string, error)
 

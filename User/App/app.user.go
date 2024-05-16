@@ -9,8 +9,11 @@ type UseCase interface {
 	CreateUser(user model2.User) error
 	GetUserByEmail(email string) (model2.User, error)
 	GetUserByName(name string) (model2.User, error)
+
 	UpdateUserEmail(ActualEmail, NewEmail string) error
 	UpdateUserName(email, NewName string) error
+	UpdateUserPassword(email, NewPassword string) error
+
 	AreEqual(email, passwordToVerify string) (bool, error)
 
 	FindEmailByName(name string) (string, error)

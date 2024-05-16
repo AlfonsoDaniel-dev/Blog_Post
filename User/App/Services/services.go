@@ -20,6 +20,8 @@ type Services interface {
 	Login(user models2.Login) (string, error)
 
 	UpdateEmail(actualEmail string, form models2.UpdateEmailForm) error
+	UpdatePassword(form models2.UpdatePasswordForm) error
+	UpdateName(form models2.UpdateNameForm) error
 
 	CreatePost(email string, post models2.CreatePost) (models2.Post, error)
 
@@ -29,5 +31,4 @@ type Services interface {
 	GetAllPostsFromUserEmail(email string) ([]models2.Post, error)
 	GetPostByTitleAndEmail(title string, email string) (models2.Post, error)
 	GetAllPostsFromName(name string) ([]models2.Post, error)
-	UpdateName(email, NewName string) error
 }

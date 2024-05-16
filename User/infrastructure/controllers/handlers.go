@@ -231,7 +231,9 @@ func (H *Handler) UserUpdateTheirName(c echo.Context) error {
 		return c.JSON(http.StatusForbidden, response)
 	}
 
-	err = H.Services.UpdateName(email, data.Name)
+	data.Email = email
+
+	err = H.Services.UpdateName(data)
 
 	response := responses.NewResponse(data, "Succes", "Name updated Succesfully")
 	return c.JSON(http.StatusOK, response)
@@ -264,5 +266,38 @@ func (H *Handler) UpdateUserEmail(c echo.Context) error {
 	}
 
 	response := responses.NewResponse(nil, "Success", "Email updated Succesfully")
+	return c.JSON(http.StatusOK, response)
+}
+
+func (H *Handler) UpdatePassword(c echo.Context) error {
+	if c.Request().Method != http.MethodPut {
+		response := responses.NewResponse(nil, "Error", "Method not allowed")
+		return c.JSON(http.StatusMethodNotAllowed, response)
+	}
+	token := c.Request().Header.Get("Authorization")
+
+	email, err := authorization.GetEmailFromJWT(token)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error while getting email from token")
+		return c.JSON(http.StatusForbidden, response)
+	}
+
+	data := models2.UpdatePasswordForm{}
+
+	err = c.Bind(&data)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Request bad structured")
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
+	data.Email = email
+
+	err = H.Services.UpdatePassword(data)
+	if err != nil {
+		response := responses.NewResponse(err, "Error", "Error While updating password")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	response := responses.NewResponse(nil, "Success", "Password updated Succesfully")
 	return c.JSON(http.StatusOK, response)
 }
