@@ -110,6 +110,26 @@ func (P *userStorage) PsqlFindPostById(id uuid.UUID) (model2.Post, error) {
 	return post, nil
 }
 
+func (P *userStorage) PsqlFindPostTitle(email string) (string, error) {
+	stmt, err := P.db.Prepare(SqlFindPostTitle)
+	if err != nil {
+		return "", err
+	}
+
+	defer stmt.Close()
+
+	row := stmt.QueryRow(email)
+
+	var title string
+
+	err = row.Scan(&title)
+	if err != nil {
+		return "", err
+	}
+
+	return title, nil
+}
+
 func (P *userStorage) PsqlUpdatePostTitle(email string, title string) error {
 	stmt, err := P.db.Prepare(SqlUpdatePostTitle)
 	if err != nil {

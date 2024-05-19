@@ -64,6 +64,19 @@ func (U *User) UpdatePostTitle(title, email string) error {
 	return nil
 }
 
+func (U *User) GetPostTitle(email string) (string, error) {
+	if email == "" {
+		return "", errors.New("please provide an valid email")
+	}
+
+	postTitle, err := U.UserStorage.PsqlFindPostTitle(email)
+	if err != nil {
+		return "", err
+	}
+
+	return postTitle, nil
+}
+
 func (U *User) UpdatePostBody(body, email string) error {
 	if body == "" || email == "" {
 		return errors.New("please provide a valid post body")

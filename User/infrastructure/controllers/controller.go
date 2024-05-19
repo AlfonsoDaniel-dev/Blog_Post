@@ -24,6 +24,9 @@ type HanlderServices interface {
 	UserUpdateTheirName(c echo.Context) error
 	UserUpdateTheirPassword(c echo.Context) error
 
+	UserUpdatePostTitle(c echo.Context) error
+	UserUpdatePostBody(c echo.Context) error
+
 	UserGetTheirInfo(c echo.Context) error
 
 	GetAll(c echo.Context) error
@@ -58,16 +61,20 @@ func (h *UserController) PrivateRoutes(e *echo.Echo) {
 	users := e.Group("/api/v1/private")
 	users.Use(middlewares.AuthMiddleware)
 
+	users.PUT("/user/email", h.HanlderServices.UserUpdateTheirEmail)
+	users.PUT("/user/name", h.HanlderServices.UserUpdateTheirName)
+	users.PUT("/user/password", h.HanlderServices.UserUpdateTheirPassword)
+
 	users.GET("/user", h.HanlderServices.UserGetTheirInfo)
 	users.GET("/", h.HanlderServices.GetAllPostsFromEmail)
 	users.GET("/users", h.HanlderServices.GetAll)
 
 	users.POST("/post", h.HanlderServices.CreatePost)
 
-	users.PUT("/user/email", h.HanlderServices.UserUpdateTheirEmail)
-	users.PUT("/user/name", h.HanlderServices.UserUpdateTheirName)
-	users.PUT("/user/password", h.HanlderServices.UserUpdateTheirPassword)
+	users.POST("/posts/update/title", h.HanlderServices.UserUpdatePostTitle)
+	users.POST("/posts/update/body", h.HanlderServices.UserUpdatePostBody)
 }
+
 func (h *UserController) PublicRoutes(e *echo.Echo) {
 
 	e.Use(middleware.Recover())

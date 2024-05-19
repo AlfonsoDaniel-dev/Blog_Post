@@ -295,3 +295,65 @@ func (H *Handler) UserUpdateTheirPassword(c echo.Context) error {
 	response := responses.NewResponse(data, "Success", "Password updated Succesfully")
 	return c.JSON(http.StatusOK, response)
 }
+
+func (H *Handler) UserUpdatePostTitle(c echo.Context) error {
+	if c.Request().Method != http.MethodPut {
+		response := responses.NewResponse(nil, "Error", "Method not allowed")
+		return c.JSON(http.StatusMethodNotAllowed, response)
+	}
+
+	token := c.Request().Header.Get("Authorization")
+	email, err := authorization.GetEmailFromJWT(token)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error while getting email from token")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	post := models2.UpdatePost{}
+
+	err = c.Bind(&post)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Request bad structured")
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
+	err = H.Services.UpdatePostTitle(email, post)
+	if err != nil {
+		response := responses.NewResponse(err, "Error", "Error While updating post title")
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
+	response := responses.NewResponse(nil, "Success", "Title updated Succesfully")
+	return c.JSON(http.StatusOK, response)
+}
+
+func (H *Handler) UserUpdatePostBody(c echo.Context) error {
+	if c.Request().Method != http.MethodPut {
+		response := responses.NewResponse(nil, "Error", "Method not allowed")
+		return c.JSON(http.StatusMethodNotAllowed, response)
+	}
+
+	token := c.Request().Header.Get("Authorization")
+	email, err := authorization.GetEmailFromJWT(token)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error while getting email from token")
+		return c.JSON(http.StatusForbidden, response)
+	}
+
+	postBody := models2.UpdatePost{}
+
+	err = c.Bind(&postBody)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Request bad structured")
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
+	err = H.Services.UpdatePostBody(email, postBody)
+	if err != nil {
+		response := responses.NewResponse(err, "Error", "Error While updating post body")
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
+	response := responses.NewResponse(postBody, "Success", "Post updated Succesfully")
+	return c.JSON(http.StatusOK, response)
+}
