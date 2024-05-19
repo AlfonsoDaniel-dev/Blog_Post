@@ -3,6 +3,7 @@ package Services
 import (
 	"errors"
 	models2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
+	"strings"
 )
 
 func (S *Service) UpdatePostTitle(email string, postform models2.UpdatePost) error {
@@ -19,7 +20,9 @@ func (S *Service) UpdatePostTitle(email string, postform models2.UpdatePost) err
 		return errors.New("titles cannot be the same title")
 	}
 
-	err = S.UseCase.UpdatePostTitle(email, postform.Title)
+	postform.Title = strings.ReplaceAll(postform.Title, " ", "_")
+
+	err = S.UseCase.UpdatePostTitle(postform.Title, email)
 	if err != nil {
 		return errors.New("failed to update post title")
 	}

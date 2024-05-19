@@ -64,6 +64,7 @@ func (h *UserController) PrivateRoutes(e *echo.Echo) {
 	users.PUT("/user/email", h.HanlderServices.UserUpdateTheirEmail)
 	users.PUT("/user/name", h.HanlderServices.UserUpdateTheirName)
 	users.PUT("/user/password", h.HanlderServices.UserUpdateTheirPassword)
+	users.GET("/user/posts", h.HanlderServices.GetAllPostsFromEmail)
 
 	users.GET("/user", h.HanlderServices.UserGetTheirInfo)
 	users.GET("/", h.HanlderServices.GetAllPostsFromEmail)
@@ -71,8 +72,8 @@ func (h *UserController) PrivateRoutes(e *echo.Echo) {
 
 	users.POST("/post", h.HanlderServices.CreatePost)
 
-	users.POST("/posts/update/title", h.HanlderServices.UserUpdatePostTitle)
-	users.POST("/posts/update/body", h.HanlderServices.UserUpdatePostBody)
+	users.PUT("/post/update/title", h.HanlderServices.UserUpdatePostTitle)
+	users.PUT("/post/update/body", h.HanlderServices.UserUpdatePostBody)
 }
 
 func (h *UserController) PublicRoutes(e *echo.Echo) {

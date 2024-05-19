@@ -64,7 +64,7 @@ func (U *User) UpdatePostTitle(title, email string) error {
 	return nil
 }
 
-func (U *User) GetPostTitle(email string) (string, error) {
+func (U *User) FindPostTitle(email string) (string, error) {
 	if email == "" {
 		return "", errors.New("please provide an valid email")
 	}

@@ -138,8 +138,7 @@ func (P *userStorage) PsqlUpdatePostTitle(email string, title string) error {
 
 	defer stmt.Close()
 
-	now := time.Now()
-	_, err = stmt.Exec(title, now, email)
+	_, err = stmt.Exec(title, email)
 	if err != nil {
 		return err
 	}

@@ -349,6 +349,7 @@ func (H *Handler) UserUpdatePostBody(c echo.Context) error {
 	}
 
 	err = H.Services.UpdatePostBody(email, postBody)
+	fmt.Println(err)
 	if err != nil {
 		response := responses.NewResponse(err, "Error", "Error While updating post body")
 		return c.JSON(http.StatusBadRequest, response)
