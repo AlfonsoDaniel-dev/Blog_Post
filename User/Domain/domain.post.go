@@ -51,6 +51,32 @@ func (U *User) GetPostsByEmail(Email string) ([]model2.Post, error) {
 	return posts, nil
 }
 
+func (U *User) UpdatePostTitle(title, email string) error {
+	if title == "" || email == "" {
+		return errors.New("please provide a valid title/email")
+	}
+
+	err := U.UserStorage.PsqlUpdatePostTitle(email, title)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (U *User) UpdatePostBody(body, email string) error {
+	if body == "" || email == "" {
+		return errors.New("please provide a valid post body")
+	}
+
+	err := U.UserStorage.PsqlUpdatePostBody(email, body)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (U *User) FindPostsByTitle(title string) ([]model2.Post, error) {
 	if title == "" {
 		return nil, errors.New("search title can't be empty")

@@ -25,5 +25,8 @@ type UseCase interface {
 	FindPostsByTitle(title string) ([]model2.Post, error)
 	FindPostById(postId uuid.UUID) (model2.Post, error)
 
+	UpdatePostTitle(title, email string) error
+	UpdatePostBody(body, email string) error
+
 	GetAllUsers() ([]model2.User, error)
 }

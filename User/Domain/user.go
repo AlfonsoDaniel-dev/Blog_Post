@@ -24,7 +24,9 @@ type UserStorage interface {
 	PsqlGetUserPosts(name string) ([]model2.Post, error)
 	PsqlFindPostById(id uuid.UUID) (model2.Post, error)
 	PsqlFindPostByTitle(title string) ([]model2.Post, error)
+
 	PsqlUpdatePostBody(email, body string) error
+	PsqlUpdatePostTitle(email, title string) error
 
 	PsqlFindPostId(searchTitle, SearchEmail string) (uuid.UUID, error)
 
