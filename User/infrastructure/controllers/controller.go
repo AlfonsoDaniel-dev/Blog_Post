@@ -76,7 +76,7 @@ func (h *UserController) PrivateRoutes(e *echo.Echo) {
 
 	users.PUT("/post/update/title", h.HanlderServices.UserUpdatePostTitle)
 	users.PUT("/post/update/body", h.HanlderServices.UserUpdatePostBody)
-	users.DELETE("post/delete/:title", h.HanlderServices.UserDeletePost)
+	users.DELETE("/post/delete/:title", h.HanlderServices.UserDeletePost)
 }
 
 func (h *UserController) PublicRoutes(e *echo.Echo) {

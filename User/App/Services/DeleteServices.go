@@ -1,6 +1,8 @@
 package Services
 
-import "errors"
+import (
+	"errors"
+)
 
 func (S *Service) DeletePost(title, email string) error {
 	if title == "" || email == "" {
