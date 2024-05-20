@@ -135,3 +135,16 @@ func (u *User) FindEmailByName(name string) (string, error) {
 
 	return email, err
 }
+
+func (u *User) DeleteAccount(email string) error {
+	if email == "" {
+		return errors.New("please provide a valid email")
+	}
+
+	err := u.UserStorage.PsqlDeleteAccount(email)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

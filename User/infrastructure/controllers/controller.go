@@ -28,6 +28,7 @@ type HanlderServices interface {
 	UserUpdatePostBody(c echo.Context) error
 
 	UserDeletePost(c echo.Context) error
+	UserDeleteTheirAccount(c echo.Context) error
 
 	UserGetTheirInfo(c echo.Context) error
 
@@ -77,6 +78,8 @@ func (h *UserController) PrivateRoutes(e *echo.Echo) {
 	users.PUT("/post/update/title", h.HanlderServices.UserUpdatePostTitle)
 	users.PUT("/post/update/body", h.HanlderServices.UserUpdatePostBody)
 	users.DELETE("/post/delete/:title", h.HanlderServices.UserDeletePost)
+
+	users.POST("/users/account/delete", h.HanlderServices.UserDeleteTheirAccount)
 }
 
 func (h *UserController) PublicRoutes(e *echo.Echo) {

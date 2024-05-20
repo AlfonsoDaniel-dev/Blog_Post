@@ -383,3 +383,36 @@ func (H *Handler) UserDeletePost(c echo.Context) error {
 	response := responses.NewResponse(nil, "Success", "Post deleted Succesfully")
 	return c.JSON(http.StatusOK, response)
 }
+
+func (H *Handler) UserDeleteTheirAccount(c echo.Context) error {
+	if c.Request().Method != http.MethodPost {
+		response := responses.NewResponse(nil, "Error", "Method not allowed")
+		return c.JSON(http.StatusMethodNotAllowed, response)
+	}
+
+	token := c.Request().Header.Get("Authorization")
+	email, err := authorization.GetEmailFromJWT(token)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error while authenticate user")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	form := models2.DeleteAccountForm{}
+
+	err = c.Bind(&form)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Request bad structured")
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
+	form.Email = email
+
+	err = H.Services.DeleteAccount(form)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error while deleting account")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	response := responses.NewResponse(nil, "Success", "Account deleted Succesfully")
+	return c.JSON(http.StatusOK, response)
+}

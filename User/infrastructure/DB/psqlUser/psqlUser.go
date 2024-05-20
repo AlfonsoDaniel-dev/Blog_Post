@@ -260,3 +260,19 @@ func (U *userStorage) PsqlFindUserEmailByName(name string) (string, error) {
 
 	return email, nil
 }
+
+func (U *userStorage) PsqlDeleteAccount(email string) error {
+	stmt, err := U.db.Prepare(SqlDeleteAccount)
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(email)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

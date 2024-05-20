@@ -17,3 +17,5 @@ const SqlLoginGetHashdPasswordWithEmail = `SELECT password FROM users WHERE emai
 
 const SqlGetUserName = `SELECT name FROM users WHERE email = $1`
 const SqlFindUserEmailByName = `SELECT email FROM users WHERE name = $1`
+
+const SqlDeleteAccount = `DELETE FROM users WHERE email = $1`
