@@ -28,7 +28,5 @@ type UseCase interface {
 	UpdatePostTitle(title, email string) error
 	UpdatePostBody(body, email string) error
 
-	DeletePostByTitleAndEmail(title, email string) error
-
 	GetAllUsers() ([]model2.User, error)
 }

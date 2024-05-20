@@ -115,16 +115,3 @@ func (U *User) FindPostId(searchTitle, searchEmail string) (uuid.UUID, error) {
 
 	return post, nil
 }
-
-func (U *User) DeletePostByTitleAndEmail(title, email string) error {
-	if title == "" || email == "" {
-		return errors.New("please provide a valid title/email")
-	}
-
-	err := U.UserStorage.PsqlDeletePost(email, title)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
