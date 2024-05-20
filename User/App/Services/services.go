@@ -23,6 +23,12 @@ type Services interface {
 	UpdatePassword(email string, form models2.UpdatePasswordForm) error
 	UpdateName(email string, form models2.UpdateNameForm) error
 
+	UpdatePostTitle(email string, PostForm models2.UpdatePost) error
+	UpdatePostBody(email string, Postform models2.UpdatePost) error
+	DeletePost(title, email string) error
+
+	DeleteAccount(form models2.DeleteAccountForm) error
+
 	CreatePost(email string, post models2.CreatePost) (models2.Post, error)
 
 	GetUserByEmail(email string) (models2.UserDTO, error)

@@ -110,6 +110,26 @@ func (P *userStorage) PsqlFindPostById(id uuid.UUID) (model2.Post, error) {
 	return post, nil
 }
 
+func (P *userStorage) PsqlFindPostTitle(email string) (string, error) {
+	stmt, err := P.db.Prepare(SqlFindPostTitle)
+	if err != nil {
+		return "", err
+	}
+
+	defer stmt.Close()
+
+	row := stmt.QueryRow(email)
+
+	var title string
+
+	err = row.Scan(&title)
+	if err != nil {
+		return "", err
+	}
+
+	return title, nil
+}
+
 func (P *userStorage) PsqlUpdatePostTitle(email string, title string) error {
 	stmt, err := P.db.Prepare(SqlUpdatePostTitle)
 	if err != nil {
@@ -118,8 +138,7 @@ func (P *userStorage) PsqlUpdatePostTitle(email string, title string) error {
 
 	defer stmt.Close()
 
-	now := time.Now()
-	_, err = stmt.Exec(title, now, email)
+	_, err = stmt.Exec(title, email)
 	if err != nil {
 		return err
 	}
@@ -163,4 +182,21 @@ func (U *userStorage) PsqlFindPostId(searchTitle, searchEmail string) (uuid.UUID
 	}
 
 	return id, nil
+}
+
+func (P *userStorage) PsqlDeletePost(title, email string) error {
+	stmt, err := P.db.Prepare(SqlDeletePost)
+
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(title, email)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

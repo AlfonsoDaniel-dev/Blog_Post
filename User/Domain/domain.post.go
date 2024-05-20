@@ -64,6 +64,19 @@ func (U *User) UpdatePostTitle(title, email string) error {
 	return nil
 }
 
+func (U *User) FindPostTitle(email string) (string, error) {
+	if email == "" {
+		return "", errors.New("please provide an valid email")
+	}
+
+	postTitle, err := U.UserStorage.PsqlFindPostTitle(email)
+	if err != nil {
+		return "", err
+	}
+
+	return postTitle, nil
+}
+
 func (U *User) UpdatePostBody(body, email string) error {
 	if body == "" || email == "" {
 		return errors.New("please provide a valid post body")
@@ -114,4 +127,17 @@ func (U *User) FindPostId(searchTitle, searchEmail string) (uuid.UUID, error) {
 	}
 
 	return post, nil
+}
+
+func (U *User) DeletePostByTitleAndEmail(title, email string) error {
+	if title == "" || email == "" {
+		return errors.New("please provide a valid title and email")
+	}
+
+	err := U.UserStorage.PsqlDeletePost(title, email)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

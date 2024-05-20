@@ -295,3 +295,124 @@ func (H *Handler) UserUpdateTheirPassword(c echo.Context) error {
 	response := responses.NewResponse(data, "Success", "Password updated Succesfully")
 	return c.JSON(http.StatusOK, response)
 }
+
+func (H *Handler) UserUpdatePostTitle(c echo.Context) error {
+	if c.Request().Method != http.MethodPut {
+		response := responses.NewResponse(nil, "Error", "Method not allowed")
+		return c.JSON(http.StatusMethodNotAllowed, response)
+	}
+
+	token := c.Request().Header.Get("Authorization")
+	email, err := authorization.GetEmailFromJWT(token)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error while getting email from token")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	post := models2.UpdatePost{}
+
+	err = c.Bind(&post)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Request bad structured")
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
+	err = H.Services.UpdatePostTitle(email, post)
+	if err != nil {
+		response := responses.NewResponse(err, "Error", "Error While updating post title")
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
+	response := responses.NewResponse(nil, "Success", "Title updated Succesfully")
+	return c.JSON(http.StatusOK, response)
+}
+
+func (H *Handler) UserUpdatePostBody(c echo.Context) error {
+	if c.Request().Method != http.MethodPut {
+		response := responses.NewResponse(nil, "Error", "Method not allowed")
+		return c.JSON(http.StatusMethodNotAllowed, response)
+	}
+
+	token := c.Request().Header.Get("Authorization")
+	email, err := authorization.GetEmailFromJWT(token)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error while getting email from token")
+		return c.JSON(http.StatusForbidden, response)
+	}
+
+	postBody := models2.UpdatePost{}
+
+	err = c.Bind(&postBody)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Request bad structured")
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
+	err = H.Services.UpdatePostBody(email, postBody)
+	fmt.Println(err)
+	if err != nil {
+		response := responses.NewResponse(err, "Error", "Error While updating post body")
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
+	response := responses.NewResponse(postBody, "Success", "Post updated Succesfully")
+	return c.JSON(http.StatusOK, response)
+}
+
+func (H *Handler) UserDeletePost(c echo.Context) error {
+	if c.Request().Method != http.MethodDelete {
+		response := responses.NewResponse(nil, "Error", "method not allowed")
+		return c.JSON(http.StatusMethodNotAllowed, response)
+	}
+
+	token := c.Request().Header.Get("Authorization")
+	email, err := authorization.GetEmailFromJWT(token)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error while authenticate user")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	title := c.Param("title")
+
+	err = H.Services.DeletePost(title, email)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error while deleting post")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	response := responses.NewResponse(nil, "Success", "Post deleted Succesfully")
+	return c.JSON(http.StatusOK, response)
+}
+
+func (H *Handler) UserDeleteTheirAccount(c echo.Context) error {
+	if c.Request().Method != http.MethodPost {
+		response := responses.NewResponse(nil, "Error", "Method not allowed")
+		return c.JSON(http.StatusMethodNotAllowed, response)
+	}
+
+	token := c.Request().Header.Get("Authorization")
+	email, err := authorization.GetEmailFromJWT(token)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error while authenticate user")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	form := models2.DeleteAccountForm{}
+
+	err = c.Bind(&form)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Request bad structured")
+		return c.JSON(http.StatusBadRequest, response)
+	}
+
+	form.Email = email
+
+	err = H.Services.DeleteAccount(form)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error while deleting account")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	response := responses.NewResponse(nil, "Success", "Account deleted Succesfully")
+	return c.JSON(http.StatusOK, response)
+}
