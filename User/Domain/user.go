@@ -31,6 +31,8 @@ type UserStorage interface {
 	PsqlFindPostId(searchTitle, SearchEmail string) (uuid.UUID, error)
 	PsqlFindPostTitle(SearchEmail string) (string, error)
 
+	PsqlDeletePost(title, email string) error
+
 	PsqlLoginGetEmail(email string) (string, error)
 	PsqlLoginGetPassword(email string) (string, error)
 }

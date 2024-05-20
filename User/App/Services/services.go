@@ -25,6 +25,7 @@ type Services interface {
 
 	UpdatePostTitle(email string, PostForm models2.UpdatePost) error
 	UpdatePostBody(email string, Postform models2.UpdatePost) error
+	DeletePost(title, email string) error
 
 	CreatePost(email string, post models2.CreatePost) (models2.Post, error)
 

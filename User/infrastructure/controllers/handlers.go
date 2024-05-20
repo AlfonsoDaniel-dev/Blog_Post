@@ -358,3 +358,28 @@ func (H *Handler) UserUpdatePostBody(c echo.Context) error {
 	response := responses.NewResponse(postBody, "Success", "Post updated Succesfully")
 	return c.JSON(http.StatusOK, response)
 }
+
+func (H *Handler) UserDeletePost(c echo.Context) error {
+	if c.Request().Method != http.MethodDelete {
+		response := responses.NewResponse(nil, "Error", "method not allowed")
+		return c.JSON(http.StatusMethodNotAllowed, response)
+	}
+
+	token := c.Request().Header.Get("Authorization")
+	email, err := authorization.GetEmailFromJWT(token)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error while authenticate user")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	title := c.Param("title")
+
+	err = H.Services.DeletePost(title, email)
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error while deleting post")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+
+	response := responses.NewResponse(nil, "Success", "Post deleted Succesfully")
+	return c.JSON(http.StatusOK, response)
+}
