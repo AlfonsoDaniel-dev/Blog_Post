@@ -28,6 +28,8 @@ type UserStorage interface {
 	PsqlUpdatePostBody(email, body string) error
 	PsqlUpdatePostTitle(email, title string) error
 
+	PsqlDeletePost(email, title string) error
+
 	PsqlFindPostId(searchTitle, SearchEmail string) (uuid.UUID, error)
 
 	PsqlLoginGetEmail(email string) (string, error)

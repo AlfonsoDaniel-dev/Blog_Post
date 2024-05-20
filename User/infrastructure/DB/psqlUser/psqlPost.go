@@ -164,3 +164,19 @@ func (U *userStorage) PsqlFindPostId(searchTitle, searchEmail string) (uuid.UUID
 
 	return id, nil
 }
+
+func (U *userStorage) PsqlDeletePost(email, title string) error {
+	stmt, err := U.db.Prepare(SqlDeletePost)
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(title, email)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
