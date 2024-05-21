@@ -14,13 +14,12 @@ func NewHttp(db *sql.DB) *echo.Echo {
 
 	API.InitRoutes(e, db)
 
-	/*
-		corsConfig := middleware.CORSConfig{
-			AllowOrigins: strings.Split(os.Getenv("ALLOW_ORIGINS"), ","),
-			AllowMethods: strings.Split(os.Getenv("ALLOWED_METHODS"), ","),
-		}
+	corsConfig := middleware.CORSConfig{
+		AllowOrigins: []string{"http://127.0.0.1:5500", "*"},
+		AllowMethods: []string{echo.GET, echo.POST, echo.PUT, echo.DELETE},
+	}
 
-		e.Use(middleware.CORSWithConfig(corsConfig)) */
+	e.Use(middleware.CORSWithConfig(corsConfig))
 
 	return e
 }
