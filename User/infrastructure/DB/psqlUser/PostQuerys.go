@@ -9,3 +9,4 @@ const SqlUpdatePostBody = `UPDATE posts SET body = $1, updated_at = now() WHERE 
 const SqlFindPostId = `SELECT id FROM posts WHERE owner_email = $1 AND title = $2`
 const SqlFindPostTitle = `SELECT title FROM posts WHERE owner_email = $1`
 const SqlDeletePost = `DELETE FROM posts WHERE title = $1 AND owner_email = $2`
+const SqlGetAllPosts = `SELECT id, title, body, owner_email, created_at, updated_at FROM posts`

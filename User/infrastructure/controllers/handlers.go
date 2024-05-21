@@ -416,3 +416,18 @@ func (H *Handler) UserDeleteTheirAccount(c echo.Context) error {
 	response := responses.NewResponse(nil, "Success", "Account deleted Succesfully")
 	return c.JSON(http.StatusOK, response)
 }
+
+func (H *Handler) GetAllPosts(c echo.Context) error {
+	if c.Request().Method != http.MethodGet {
+		response := responses.NewResponse(nil, "ERROR", "Method Not allowed")
+		return c.JSON(http.StatusMethodNotAllowed, response)
+	}
+
+	posts, err := H.Services.UserGetAllPosts()
+	if err != nil {
+		response := responses.NewResponse(nil, "Error", "Error while getting all posts")
+		return c.JSON(http.StatusInternalServerError, response)
+	}
+	response := responses.NewResponse(posts, "OK", "Posts delivered successfully")
+	return c.JSON(http.StatusOK, response)
+}

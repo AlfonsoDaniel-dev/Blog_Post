@@ -16,6 +16,7 @@ type UserStorage interface {
 	PsqlUpdateUserPassword(email, password string) error
 
 	PsqlGetAllUsers() ([]model2.User, error)
+	PsqlGetAllPosts() ([]model2.Post, error)
 	PsqlFindUserEmailByName(name string) (string, error)
 
 	PsqlGetUserName(email string) (string, error)

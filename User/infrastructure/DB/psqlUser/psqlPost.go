@@ -200,3 +200,33 @@ func (P *userStorage) PsqlDeletePost(title, email string) error {
 
 	return nil
 }
+
+func (P userStorage) PsqlGetAllPosts() ([]model2.Post, error) {
+	stmt, err := P.db.Prepare(SqlGetAllPosts)
+	if err != nil {
+		return nil, err
+	}
+
+	defer stmt.Close()
+
+	rows, err := stmt.Query()
+	if err != nil {
+		return nil, err
+	}
+	posts := []model2.Post{}
+
+	for rows.Next() {
+		post := model2.Post{}
+		nullTime := sql.NullTime{}
+
+		err := rows.Scan(&post.ID, &post.Title, &post.Body, &post.OwnerEmail, &post.CreatedAt, &nullTime)
+		post.UpdatedAt = nullTime.Time
+		if err != nil {
+			return nil, err
+		}
+
+		posts = append(posts, post)
+	}
+
+	return posts, nil
+}

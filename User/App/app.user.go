@@ -7,6 +7,8 @@ import (
 
 type UseCase interface {
 	CreateUser(user model2.User) error
+
+	GetAllPosts() ([]model2.Post, error)
 	GetUserByEmail(email string) (model2.User, error)
 	GetUserByName(name string) (model2.User, error)
 

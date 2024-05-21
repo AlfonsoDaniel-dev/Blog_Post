@@ -31,6 +31,7 @@ type Services interface {
 
 	CreatePost(email string, post models2.CreatePost) (models2.Post, error)
 
+	UserGetAllPosts() ([]models2.Post, error)
 	GetUserByEmail(email string) (models2.UserDTO, error)
 	GetUserByName(name string) (models2.UserDTO, error)
 	GetAllUsers() ([]models2.UserDTO, error)

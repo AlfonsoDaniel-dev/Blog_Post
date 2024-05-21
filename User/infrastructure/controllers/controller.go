@@ -19,6 +19,7 @@ type HanlderServices interface {
 	GetPostsByTitleAndEmail(c echo.Context) error
 	GetAllPostsFromEmail(c echo.Context) error
 	GetPostsFromName(c echo.Context) error
+	GetAllPosts(c echo.Context) error
 
 	UserUpdateTheirEmail(c echo.Context) error
 	UserUpdateTheirName(c echo.Context) error
@@ -89,6 +90,7 @@ func (h *UserController) PublicRoutes(e *echo.Echo) {
 	public := e.Group("/api/v1/public")
 	public.GET("/:name", h.HanlderServices.GetPostsFromName)
 	public.GET("/:title/:email", h.HanlderServices.GetPostsByTitleAndEmail)
+	public.GET("/posts/all", h.HanlderServices.GetAllPosts)
 	public.POST("/register", h.HanlderServices.Register)
 	public.POST("/Login", h.HanlderServices.Login)
 }

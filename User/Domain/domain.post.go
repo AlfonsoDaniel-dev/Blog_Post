@@ -51,6 +51,15 @@ func (U *User) GetPostsByEmail(Email string) ([]model2.Post, error) {
 	return posts, nil
 }
 
+func (U *User) GetAllPosts() ([]model2.Post, error) {
+	post, err := U.UserStorage.PsqlGetAllPosts()
+	if err != nil {
+		return nil, err
+	}
+
+	return post, nil
+}
+
 func (U *User) UpdatePostTitle(title, email string) error {
 	if title == "" || email == "" {
 		return errors.New("please provide a valid title/email")

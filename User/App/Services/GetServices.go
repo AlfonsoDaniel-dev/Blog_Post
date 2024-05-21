@@ -2,6 +2,7 @@ package Services
 
 import (
 	"errors"
+	"fmt"
 	models2 "github.com/TeenBanner/Inventory_system/User/Domain/model"
 	"strings"
 )
@@ -141,6 +142,22 @@ func (S *Service) GetAllPostsFromName(name string) ([]models2.Post, error) {
 	}
 
 	for i := 0; i < len(posts); i++ {
+		title := posts[i].Title
+
+		posts[i].Title = strings.ReplaceAll(title, "_", " ")
+	}
+
+	return posts, nil
+}
+
+func (S *Service) UserGetAllPosts() ([]models2.Post, error) {
+	posts, err := S.UseCase.GetAllPosts()
+	if err != nil {
+		fmt.Println(err)
+		return nil, errors.New("somthing went wrong while getting all posts")
+	}
+
+	for i := range posts {
 		title := posts[i].Title
 
 		posts[i].Title = strings.ReplaceAll(title, "_", " ")
